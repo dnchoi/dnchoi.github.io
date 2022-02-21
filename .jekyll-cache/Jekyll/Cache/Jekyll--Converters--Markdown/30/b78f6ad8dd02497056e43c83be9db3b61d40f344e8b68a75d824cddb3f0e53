@@ -1,0 +1,401 @@
+I"g<h1 id="gstreamer">Gstreamer</h1>
+
+<h2 id="1-checked-gstreamer-devices">1. Checked Gstreamer devices</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+</pre></td> --><td class="rouge-code"><pre>gst-device-monitor-1.0
+
+<span class="nt">---------------------------------------</span>
+
+Probing devices...
+
+... <span class="o">(</span>omit<span class="o">)</span>
+
+Device found:
+
+	name  : USB 2.0 Camera: HD USB Camera
+	class : Video/Source
+	caps  : video/x-raw, <span class="nv">format</span><span class="o">=(</span>string<span class="o">)</span>YUY2, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>1920, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>1080, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>6/1<span class="p">;</span>
+	        video/x-raw, <span class="nv">format</span><span class="o">=(</span>string<span class="o">)</span>YUY2, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>1280, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>1024, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>6/1<span class="p">;</span>
+	        video/x-raw, <span class="nv">format</span><span class="o">=(</span>string<span class="o">)</span>YUY2, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>1280, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>720, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>9/1<span class="p">;</span>
+	        video/x-raw, <span class="nv">format</span><span class="o">=(</span>string<span class="o">)</span>YUY2, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>1024, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>768, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>6/1<span class="p">;</span>
+	        video/x-raw, <span class="nv">format</span><span class="o">=(</span>string<span class="o">)</span>YUY2, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>800, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>600, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>20/1<span class="p">;</span>
+	        video/x-raw, <span class="nv">format</span><span class="o">=(</span>string<span class="o">)</span>YUY2, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>640, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>480, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>30/1<span class="p">;</span>
+	        video/x-raw, <span class="nv">format</span><span class="o">=(</span>string<span class="o">)</span>YUY2, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>320, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>240, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>30/1<span class="p">;</span>
+	        image/jpeg, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>1920, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>1080, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>30/1<span class="p">;</span>
+	        image/jpeg, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>1280, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>1024, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>30/1<span class="p">;</span>
+	        image/jpeg, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>1280, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>720, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>60/1<span class="p">;</span>
+	        image/jpeg, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>1024, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>768, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>30/1<span class="p">;</span>
+	        image/jpeg, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>800, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>600, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>60/1<span class="p">;</span>
+	        image/jpeg, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>640, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>480, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>61612/513<span class="p">;</span>
+	        image/jpeg, <span class="nv">width</span><span class="o">=(</span>int<span class="o">)</span>320, <span class="nv">height</span><span class="o">=(</span>int<span class="o">)</span>240, pixel-aspect-ratio<span class="o">=(</span>fraction<span class="o">)</span>1/1, <span class="nv">framerate</span><span class="o">=(</span>fraction<span class="o">)</span>61612/513<span class="p">;</span>
+	properties:
+		udev-probed <span class="o">=</span> <span class="nb">true
+		</span>device.bus_path <span class="o">=</span> pci-0000:00:14.0-usb-0:11:1.0
+		sysfs.path <span class="o">=</span> /sys/devices/pci0000:00/0000:00:14.0/usb1/1-11/1-11:1.0/video4linux/video0
+		device.bus <span class="o">=</span> usb
+		device.subsystem <span class="o">=</span> video4linux
+		device.vendor.id <span class="o">=</span> 05a3
+		device.vendor.name <span class="o">=</span> <span class="s2">"HD</span><span class="se">\\</span><span class="s2">x20Camera</span><span class="se">\\</span><span class="s2">x20Manufacturer"</span>
+		device.product.id <span class="o">=</span> 9230
+		device.product.name <span class="o">=</span> <span class="s2">"USB</span><span class="se">\ </span><span class="s2">2.0</span><span class="se">\ </span><span class="s2">Camera:</span><span class="se">\ </span><span class="s2">HD</span><span class="se">\ </span><span class="s2">USB</span><span class="se">\ </span><span class="s2">Camera"</span>
+		device.serial <span class="o">=</span> HD_Camera_Manufacturer_USB_2.0_Camera
+		device.capabilities <span class="o">=</span> :capture:
+		device.api <span class="o">=</span> v4l2
+		device.path <span class="o">=</span> /dev/video0
+		v4l2.device.driver <span class="o">=</span> uvcvideo
+		v4l2.device.card <span class="o">=</span> <span class="s2">"USB</span><span class="se">\ </span><span class="s2">2.0</span><span class="se">\ </span><span class="s2">Camera:</span><span class="se">\ </span><span class="s2">HD</span><span class="se">\ </span><span class="s2">USB</span><span class="se">\ </span><span class="s2">Camera"</span>
+		v4l2.device.bus_info <span class="o">=</span> usb-0000:00:14.0-11
+		v4l2.device.version <span class="o">=</span> 328861 <span class="o">(</span>0x0005049d<span class="o">)</span>
+		v4l2.device.capabilities <span class="o">=</span> 2225078273 <span class="o">(</span>0x84a00001<span class="o">)</span>
+		v4l2.device.device_caps <span class="o">=</span> 69206017 <span class="o">(</span>0x04200001<span class="o">)</span>
+	gst-launch-1.0 v4l2src <span class="o">!</span> ...
+
+... <span class="o">(</span>omit<span class="o">)</span>
+
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h1 id="2-usb-type-camera-pipeline">2. USB type camera pipeline</h1>
+
+<h2 id="used-gst-launch">Used gst-launch</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>gst-launch-1.0 v4l2src <span class="o">!</span> video/x-raw,format<span class="o">=</span>YUY2,width<span class="o">=</span>640,height<span class="o">=</span>480,framerate<span class="o">=</span>30/1 <span class="o">!</span> videoconvert <span class="o">!</span> autovideosink
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h1 id="3-rtsp-type-camera-pipeline">3. RTSP type camera pipeline</h1>
+
+<h2 id="used-gst-launch-1">Used gst-launch</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td> --><td class="rouge-code"><pre>gst-launch-1.0 rtspsrc <span class="nv">location</span><span class="o">=</span>uri <span class="nv">latency</span><span class="o">=</span>1 <span class="o">!</span> application/x-rtp, encoding-name<span class="o">=</span>JPEG,payload<span class="o">=</span>26 <span class="o">!</span> rtpjpegdepay <span class="o">!</span> jpegdec <span class="o">!</span> videoconvert <span class="o">!</span> autovideosink
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h1 id="4-used-application-opencv">4. Used application (OpenCV)</h1>
+<h2 id="usb-camera">USB camera</h2>
+<h3 id="c">C++</h3>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+</pre></td> --><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">ac</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">av</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">gst_cmd</span> <span class="o">=</span> <span class="s">"v4l2src ! video/x-raw,format=YUY2,width=640,height=480,framerate=30/1 ! videoconvert ! appsink"</span><span class="p">;</span>
+	<span class="n">cv</span><span class="o">::</span><span class="n">VideoCapture</span> <span class="n">cap</span><span class="p">(</span><span class="n">gst_cmd</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">cap</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Can't open the camera"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">img</span><span class="p">;</span>
+
+	<span class="k">while</span> <span class="p">(</span><span class="n">cap</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="k">try</span>
+		<span class="p">{</span>
+			<span class="n">cap</span> <span class="o">&gt;&gt;</span> <span class="n">img</span><span class="p">;</span>
+			
+			<span class="k">if</span> <span class="p">(</span><span class="n">img</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+			<span class="p">{</span>
+				<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"empty image"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+				<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="p">}</span>
+			
+			<span class="n">cv</span><span class="o">::</span><span class="n">imshow</span><span class="p">(</span><span class="s">"camera img"</span><span class="p">,</span> <span class="n">img</span><span class="p">);</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="n">cv</span><span class="o">::</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span> <span class="o">==</span> <span class="mi">27</span><span class="p">)</span>
+				<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">catch</span><span class="p">(</span> <span class="n">cv</span><span class="o">::</span><span class="n">Exception</span><span class="o">&amp;</span> <span class="n">e</span> <span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">err_msg</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">();</span>
+			<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"exception caught: "</span> <span class="o">&lt;&lt;</span> <span class="n">err_msg</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="python">Python</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td> --><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">gst_cmd</span> <span class="o">=</span> <span class="s">"v4l2src ! video/x-raw,format=YUY2,width=640,height=480,framerate=30/1 ! videoconvert ! appsink"</span>
+
+<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="n">gst_cmd</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="err">!</span><span class="n">cap</span><span class="p">.</span><span class="n">isOpened</span><span class="p">():</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">"Can't open the camera"</span><span class="p">)</span>
+	<span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="n">cap</span><span class="p">.</span><span class="n">isOpened</span><span class="p">():</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">ret</span><span class="p">:</span>
+			<span class="n">cv2</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">'video'</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">cv2</span><span class="p">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s">'q'</span><span class="p">):</span>
+				<span class="k">break</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">break</span>
+
+	<span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+		<span class="k">print</span><span class="p">(</span><span class="s">'OpenCV except Error : '</span><span class="p">,</span> <span class="n">ex</span><span class="p">)</span>
+
+<span class="n">cap</span><span class="p">.</span><span class="n">release</span><span class="p">()</span>
+<span class="n">cv2</span><span class="p">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="rtsp-camera">RTSP camera</h2>
+<h3 id="c-1">C++</h3>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+</pre></td> --><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;opencv2/opencv.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">ac</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">av</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">gst_cmd</span> <span class="o">=</span> <span class="s">"rtspsrc location=rtsp://192.168.0.11:5545/live1 latency=1 ! application/x-rtp, encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec ! videoconvert ! appsink"</span><span class="p">;</span>
+
+	<span class="n">cv</span><span class="o">::</span><span class="n">VideoCapture</span> <span class="n">cap</span><span class="p">(</span><span class="n">gst_cmd</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">cap</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Can't open the camera"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">img</span><span class="p">;</span>
+
+	<span class="k">while</span> <span class="p">(</span><span class="n">cap</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="k">try</span>
+		<span class="p">{</span>
+			<span class="n">cap</span> <span class="o">&gt;&gt;</span> <span class="n">img</span><span class="p">;</span>
+			
+			<span class="k">if</span> <span class="p">(</span><span class="n">img</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+			<span class="p">{</span>
+				<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"empty image"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+				<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="p">}</span>
+			
+			<span class="n">cv</span><span class="o">::</span><span class="n">imshow</span><span class="p">(</span><span class="s">"camera img"</span><span class="p">,</span> <span class="n">img</span><span class="p">);</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="n">cv</span><span class="o">::</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span> <span class="o">==</span> <span class="mi">27</span><span class="p">)</span>
+				<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">catch</span><span class="p">(</span> <span class="n">cv</span><span class="o">::</span><span class="n">Exception</span><span class="o">&amp;</span> <span class="n">e</span> <span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">err_msg</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">();</span>
+			<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"exception caught: "</span> <span class="o">&lt;&lt;</span> <span class="n">err_msg</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="python-1">Python</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td> --><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">gst_cmd</span> <span class="o">=</span> <span class="s">"rtspsrc location=rtsp://192.168.0.11:5545/live1 latency=1 ! application/x-rtp, encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec ! videoconvert ! appsink"</span>
+
+<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="n">gst_cmd</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="err">!</span><span class="n">cap</span><span class="p">.</span><span class="n">isOpened</span><span class="p">():</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">"Can't open the camera"</span><span class="p">)</span>
+	<span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="n">cap</span><span class="p">.</span><span class="n">isOpened</span><span class="p">():</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">ret</span><span class="p">:</span>
+			<span class="n">cv2</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">'video'</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">cv2</span><span class="p">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s">'q'</span><span class="p">):</span>
+				<span class="k">break</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">break</span>
+
+	<span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+		<span class="k">print</span><span class="p">(</span><span class="s">'OpenCV except Error : '</span><span class="p">,</span> <span class="n">ex</span><span class="p">)</span>
+
+<span class="n">cap</span><span class="p">.</span><span class="n">release</span><span class="p">()</span>
+<span class="n">cv2</span><span class="p">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET

@@ -25,9 +25,12 @@ jobs:
         run: |
           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
           sudo add-apt-repository ppa:rmescandon/yq
+          echo "DONE"
           sudo apt update
+          echo "DONE"
           sudo snap install yq --channel=v3/stable
-
+          echo "DONE"
+          yq --version
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -41,41 +44,33 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile') }}
           restore-keys: |
             ${{ runner.os }}-gems-
-
       - name: Bundle config
         run: |
           bundle config path ${{ env.GEMS_PATH }}
-
       - name: Bundle Install
         if: steps.bundle-cache.outputs.cache-hit != 'true'
         run: |
           bundle install
-
       - name: Bundle Install locally
         if: steps.bundle-cache.outputs.cache-hit == 'true'
         run: |
           bundle install --local
-
       - name: Check baseurl
         run: |
           baseurl="$(grep '^baseurl:' _config.yml | yq r - baseurl)"
           if [[ -n $baseurl ]]; then
             echo "SPEC_TEST=_site_no_baseurl" >> $GITHUB_ENV
           fi
-
       - name: Build Site
         run: |
           bash tools/build.sh
-
           if [[ -n $SPEC_TEST ]]; then
             # Bypass the defects of htmlproofer
             bash tools/build.sh -b "" -d "$SPEC_TEST"
           fi          
-
       - name: Test Site
         run: |
           bash tools/test.sh "$SPEC_TEST"
-
       - name: Deploy
         run: |
           bash tools/deploy.sh

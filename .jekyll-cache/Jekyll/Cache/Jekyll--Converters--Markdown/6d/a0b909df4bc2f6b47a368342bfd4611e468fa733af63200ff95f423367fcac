@@ -1,0 +1,95 @@
+I"r<div id="archives" class="pl-xl-2">
+
+  
+  
+  
+    
+    
+  <span class="lead">2022</span>
+  <ul class="list-unstyled">
+  
+    <li>
+      <div>
+        
+        
+        <span class="date day">04</span>
+        <span class="date month small text-muted">Feb</span>
+        <a href="/posts/paper_review-Fast-SCNN/">Fast-SCNN paper review</a>
+      </div>
+    </li>
+  
+
+  
+  
+  
+    <li>
+      <div>
+        
+        
+        <span class="date day">04</span>
+        <span class="date month small text-muted">Feb</span>
+        <a href="/posts/Miniconda-install/">Miniconda install</a>
+      </div>
+    </li>
+  
+
+  
+  
+  
+    <li>
+      <div>
+        
+        
+        <span class="date day">25</span>
+        <span class="date month small text-muted">Jan</span>
+        <a href="/posts/opencv-install/">OpenCV install in Ubuntu</a>
+      </div>
+    </li>
+  
+
+  
+  
+  
+    <li>
+      <div>
+        
+        
+        <span class="date day">25</span>
+        <span class="date month small text-muted">Jan</span>
+        <a href="/posts/gstreamer-pipeline/">Gstreamer pipeline</a>
+      </div>
+    </li>
+  
+
+  
+  
+  
+    <li>
+      <div>
+        
+        
+        <span class="date day">12</span>
+        <span class="date month small text-muted">Jan</span>
+        <a href="/posts/nvidia-cuda-install/">Ubuntu 18.04 install nvidia CUDA toolkit</a>
+      </div>
+    </li>
+  
+
+  
+  
+  
+    <li>
+      <div>
+        
+        
+        <span class="date day">12</span>
+        <span class="date month small text-muted">Jan</span>
+        <a href="/posts/nvidia-driver-install/">Ubuntu 18.04 install nvidia driver</a>
+      </div>
+    </li>
+  
+  </ul>
+  
+
+</div>
+:ET

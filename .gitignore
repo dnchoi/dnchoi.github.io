@@ -1,6 +1,9 @@
 # hidden files
-.*
-
+.gitattributes
+.gitmodules
+.nojekyll
+.editorconfig
+# .jekyll-cache
 # python compiled files
 *.pyc
 
