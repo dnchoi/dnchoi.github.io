@@ -8,3 +8,4 @@ tags: [paper-review, Segmentation, Deep learning]
 # Fast SCNN 
 ## Reference : [Fast-SCNN Paper](https://arxiv.org/pdf/1902.04502.pdf)
 ## Reference : [Fast-SCNN Paper](https://arxiv.org/pdf/1902.04502.pdf)
+## Reference : [Fast-SCNN Paper](https://arxiv.org/pdf/1902.04502.pdf)
