@@ -13,6 +13,7 @@ tags: [install, docker, ubuntu]
 
 ```bash
 sudo apt -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+
 ```
 
 ## 2. GPG Key
