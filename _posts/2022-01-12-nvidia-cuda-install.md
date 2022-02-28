@@ -1,6 +1,6 @@
 ---
 title: Ubuntu 18.04 install nvidia CUDA toolkit
-author: luke-dongnyeok
+author: dnchoi
 date: 2022-01-12 12:57:47
 categories: [ubuntu, install, cuda]
 tags: [install, nvidia, cuda]

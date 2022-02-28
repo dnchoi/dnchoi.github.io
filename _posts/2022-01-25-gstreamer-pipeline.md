@@ -1,6 +1,6 @@
 ---
 title: Gstreamer pipeline
-author: luke-dongnyeok
+author: dnchoi
 date: 2022-01-25 09:45:47
 categories: [Gstreamer]
 tags: [Pipeline, Gstreamer]

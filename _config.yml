@@ -18,21 +18,21 @@ description: >-                        # used by seo meta and the atom feed
   and focuses on text presentation.
 
 # Replace with the website url, e.g. 'https://username.github.io'
-url: 'https://luke-dongnyeok.github.io/'
+url: 'https://dnchoi.github.io/'
 
-author: luke-dongnyeok                  # change to your full name
+author: dnchoi                  # change to your full name
 
 avatar: /assets/img/avatar.jpg   # support internet resources
 
 github:
-  username: luke-dongnyeok             # change to your github username
+  username: dnchoi             # change to your github username
 
 social:
   name: Dongnyeok Choi                  # it will shows as the copyright owner in Footer
   email: dongnyeokc@gmail.com             # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://github.com/luke-dongnyeok       # change to your github homepage
+    - https://github.com/dnchoi       # change to your github homepage
     # Uncomment below to add more social links
 google_site_verification: google_meta_tag_verification # change to your verification string
 

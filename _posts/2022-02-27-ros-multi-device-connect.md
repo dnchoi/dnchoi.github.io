@@ -1,7 +1,7 @@
 ---
 layout: post
 title: ROS multi device connect
-author: luke-dongnyeok
+author: dnchoi
 date: 2022-02-27 09:45:47
 categories: [ROS]
 tags: [ROS]

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: ROS install in Ubuntu 
-author: luke-dongnyeok
+author: dnchoi
 date: 2022-02-27 09:45:47
 categories: [install, ROS, ubuntu]
 tags: [install, ROS, ubuntu]

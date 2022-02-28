@@ -1,6 +1,6 @@
 ---
 title: Miniconda install
-author: luke-dongnyeok
+author: dnchoi
 date: 2022-02-04 09:45:47
 categories: [python]
 tags: [miniconda, install, python]

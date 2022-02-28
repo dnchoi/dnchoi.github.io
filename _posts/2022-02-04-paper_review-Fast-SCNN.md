@@ -1,6 +1,6 @@
 ---
 title: Fast-SCNN paper review
-author: luke-dongnyeok
+author: dnchoi
 date: 2022-02-04 09:45:47
 categories: [paper_review, Segmentation]
 tags: [paper-review, Segmentation, Deep learning]

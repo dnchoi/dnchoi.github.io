@@ -1,7 +1,7 @@
 ---
 layout: post
 title: OpenCV install in Ubuntu 
-author: luke-dongnyeok
+author: dnchoi
 date: 2022-01-25 09:45:47
 categories: [install, OpenCV, ubuntu]
 tags: [install, OpenCV, ubuntu]

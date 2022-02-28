@@ -1,6 +1,6 @@
 ---
 title: Ubuntu 18.04 install nvidia driver 
-author: luke-dongnyeok
+author: dnchoi
 date: 2022-01-12 09:45:47
 categories: [ubuntu, install, cuda]
 tags: [install, nvidia, cuda]
