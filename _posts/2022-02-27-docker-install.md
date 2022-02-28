@@ -88,4 +88,4 @@ docker run --name portainer -p 9000:9000 -d --restart always -v /data/portainer:
 ```bash
 docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/CES2022:/workspace --net host --privileged -e DISPLAY=unix$DISPLAY --name host_ces2022 cuda-ros-ubuntu18.04-opencv440/ces2022:latest
 ```
-![untitled.jpg](assets/img/post/docker-install/untitled.png)
+![untitled.jpg](/assets/img/post/docker-install/untitled.png)
