@@ -11,6 +11,7 @@ tags: [ROS]
 
 ## 1. Host IP and Client IP check
 * Host
+
 ```bash
 ifconfig
 
@@ -26,6 +27,7 @@ enp7s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 ```
 
 * Client
+
 ```bash
 ifconfig
 
@@ -43,6 +45,7 @@ eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 ## 2. Setting .bashrc
 * Host
+
 ```bash
 .
 .
@@ -56,6 +59,7 @@ export ROS_HOSTNAME=$ROS_IP
 source ~/.bashrc
 ```
 * Client
+
 ```bash
 .
 .

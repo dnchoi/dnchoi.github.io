@@ -11,16 +11,17 @@ tags: [ROS]
 
 # 1. Host
 * Make launch dir
+
 ```bash
 cd {Workspace dir}/src/{Package name}
 mkdir launch
 cd launch
 ```
+
 * Make package.launch file
+
 ```bash
 vi {package}.launch
-
----------------------------------------------------------------------
 
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>

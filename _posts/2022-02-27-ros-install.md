@@ -26,6 +26,7 @@ curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo ap
 ```bash
 sudo apt update
 ```
+
 * Desktop-Full Install: (Recommended) : ROS, rqt, rviz, robot-generic libraries, 2D/3D simulators and 2D/3D perception
 
 ```bash
@@ -33,11 +34,13 @@ sudo apt install ros-melodic-desktop-full
 ```
 
 * ROS-Base: (Bare Bones) ROS package, build, and communication libraries. No GUI tools.
+
 ```bash
 sudo apt install ros-melodic-ros-base
 ```
 
 * Individual Package: You can also install a specific ROS package (replace underscores with dashes of the package name):
+
 ```bash
 sudo apt install ros-melodic-PACKAGE
 ```
@@ -64,6 +67,7 @@ source ~/.bashrc
 ```
 
 * if you use zsh
+
 ```bash
 echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
 source ~/.zshrc
