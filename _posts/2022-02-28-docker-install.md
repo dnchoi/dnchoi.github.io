@@ -4,7 +4,7 @@ title: Docker install in Ubuntu
 author: luke-dongnyeok
 date: 2022-02-28 09:45:47
 categories: [install, Docker, ubuntu]
-tags: [install, Docker, ubuntu]
+tags: [install, docker, ubuntu]
 ---
 
 # Docker install
