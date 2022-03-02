@@ -36,8 +36,8 @@ output_names = ["output_0"]
 inputs = torch.randn(2, 3, 256, 256).to(device)
 
 torch_out = torch.onnx._export(net, inputs, output_onnx, export_params=True, verbose=False, 
-input_names=input_names, output_names=output_names, 
-opset_version=11)
+                               input_names=input_names, output_names=output_names, 
+                               opset_version=11)
 ```
 ![static](/assets/img/post/onnx-runtime/static.png)
 
@@ -72,8 +72,8 @@ dynamic_axes = {'input_0' : {0 : 'batch_size'},
                     'output_0' : {0 : 'batch_size'}}
 
 torch_out = torch.onnx._export(net, inputs, output_onnx, export_params=True, verbose=False,
-input_names=input_names, output_names=output_names, 
-opset_version=11, dynamic_axes = dynamic_axes)
+                               input_names=input_names, output_names=output_names, 
+                               opset_version=11, dynamic_axes = dynamic_axes)
 
 logger.info(torch_out)
 ```
