@@ -3,6 +3,7 @@
 .gitmodules
 .nojekyll
 .editorconfig
+.vscode
 # .jekyll-cache
 # python compiled files
 *.pyc
