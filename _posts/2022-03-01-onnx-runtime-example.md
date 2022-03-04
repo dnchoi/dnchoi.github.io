@@ -197,16 +197,26 @@ if __name__ == "__main__":
 ```
 
 > Build
-
+>> build_run.sh
 ```bash
-mkdir build; cd build
+#!/bin/sh
 
-cmake ..; make all
+# exit on first error
+set -e
+rm -rf build
+mkdir -p build
+cd build
 
-cd src
+# Generate a Makefile for GCC (or Clang, depanding on CC/CXX envvar)
+cmake ..
 
-./inference --use_cpu
-./inference --use_cuda
+# Build (ie 'make')
+# cmake --build .
+make all
+cd ..
+
+./build/main
+
 ```
 
 > CMakeFiles
