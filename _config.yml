@@ -145,6 +145,19 @@ defaults:
           url: /tabs/categories/
   -
     scope:
+      path: portfolio
+    values:
+      tab_active: Portfolio
+      location: Portfolio
+      breadcrumb:
+        -
+          label: Home
+          url: /
+        -
+          label: Portfolio
+          url: /tabs/portfolio/
+  -
+    scope:
       path: tabs
     values:
       layout: page
