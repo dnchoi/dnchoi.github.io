@@ -167,22 +167,33 @@ if __name__ == "__main__":
 
 * C++
 
->Tree
-
+## Directory Hierarchy
 ```bash
-.
-├── CMakeLists.txt
-├── data
-│   ├── images
-│   │   └── european-bee-eater-2115564_1920.jpg
-│   ├── labels
-│   │   └── synset.txt
-│   └── models
-│       ├── README.md
-│       └── squeezenet1.1-7.onnx
-└── src
-    ├── CMakeLists.txt
-    └── inference.cpp
+|—— 12.png
+|—— CMakeLists.txt
+|—— build_run.sh
+|—— example.cpp
+|—— libs
+|    |—— configparser
+|        |—— CMakeLists.txt
+|        |—— configparser.cpp
+|        |—— include
+|            |—— configparser.h
+|    |—— onnxruntime
+|        |—— CMakeLists.txt
+|        |—— frvf_onnx.cpp
+|        |—— include
+|            |—— frvf_onnx.h
+|    |—— spdlog
+|        |—— include
+|            |—— spdlog
+|            |—— .
+|            |—— .
+|            |—— .
+|            |—— .
+|—— main.cpp
+|—— model.onnx
+|—— test.ini
 ```
 
 > Build
@@ -205,48 +216,209 @@ cd src
 ```cmake
 cmake_minimum_required(VERSION 3.13)
 
-project(ONNX_Runtime_Inference VERSION 0.0.1 LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 14)
+# 프로젝트 정보
+project(
+  main
+  VERSION 0.1
+  DESCRIPTION "Face recognition verify test"
+  LANGUAGES CXX
+)
+add_compile_definitions(_DEBUG_)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
-
-add_executable(inference inference.cpp)
-target_include_directories(inference PRIVATE ${ONNX_RUNTIME_SESSION_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(inference PRIVATE ${ONNX_RUNTIME_LIB} ${OpenCV_LIBRARIES})
-
-```
-
->> src/CMakeLists.txt
-
-```cmake
-cmake_minimum_required(VERSION 3.13)
-
-project(ONNX_Runtime_Examples VERSION 0.0.1 LANGUAGES CXX)
+set(CMAKE_CXX_FLAGS -pthread)
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_BUILD_TYPE RelWithDebInfo)
+
+message(STATUS CMAKE_BUILD_TYPE)                     # -- CMAKE_BUILD_TYPE
+message(STATUS ${CMAKE_BUILD_TYPE})                  # -- Debug
+message(STATUS "Configuration: ${CMAKE_BUILD_TYPE}") # -- Configuration: Debug
+message(STATUS "Compiler")
+message(STATUS " - ID       \t: ${CMAKE_CXX_COMPILER_ID}")
+message(STATUS " - Version  \t: ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS " - Path     \t: ${CMAKE_CXX_COMPILER}\n\n")
+
+
+set (onnx_Header "${CMAKE_CURRENT_SOURCE_DIR}/libs/onnxruntime/include")
+set (logger_Header "${CMAKE_SOURCE_DIR}/libs/spdlog/include")
+set (config_Header "${CMAKE_SOURCE_DIR}/libs/configparser/include")
+
+message("${onnx_Header}")
+message("${logger_Header}")
+message("${config_Header}")
+
+include_directories(
+    ${onnx_Header}
+    ${logger_Header}
+    ${config_Header}
+)
 
 find_package(OpenCV REQUIRED)
 find_path(ONNX_RUNTIME_SESSION_INCLUDE_DIRS onnxruntime_cxx_api.h HINTS /usr/local/include/onnxruntime/core/session/)
-
 find_library(ONNX_RUNTIME_LIB onnxruntime HINTS /usr/local/lib)
 
-add_subdirectory(src)
+#INIT
+# Lib 등록을 위한 작업 -> 해당 Lib Cmake 동작 후 build
+add_subdirectory(
+    libs/onnxruntime
+)
+message("ONNX runtime lib")
+add_subdirectory(
+    libs/configparser
+)
+message("configparser lib")
+# add_subdirectory(
+#     lib/ThreadPool
+# )
+# message("Thread pool shared lib build done")
+# #INIT
+
+add_executable (${PROJECT_NAME} main.cpp)
+
+# include lib file in program
+target_link_libraries(
+    ${PROJECT_NAME}
+    frvf_onnx
+    configparser
+    pthread
+)
+target_include_directories(
+    ${PROJECT_NAME} 
+    PUBLIC 
+        ${onnx_Header} 
+        ${logger_Header}
+        ${config_Header}
+)
+
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+
+```
+
+>> libs/onnxruntime/CMakeLists.txt
+
+```cmake
+cmake_minimum_required(VERSION 3.13)
+project(
+  frvf_onnx
+  VERSION 0.1
+  LANGUAGES CXX
+)
+message("@@ frvf_onnx CMake Start @@")
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+set(CMAKE_CXX_STANDARD 14)
+message("This lib name : ${PROJECT_NAME}")
+
+include_directories(include)
+
+add_library(${PROJECT_NAME} SHARED frvf_onnx.cpp)
+message("ONNX RUNTIME INCLUDE DIRS : ${ONNX_RUNTIME_SESSION_INCLUDE_DIRS}")
+message("OPENCV INCLUDE DIRS : ${OpenCV_INCLUDE_DIRS}")
+message("ONNX RUNTIME LIB : ${ONNX_RUNTIME_LIB}")
+message("OpenCV LIBRARIES : ${OpenCV_LIBRARIES}")
+target_include_directories(${PROJECT_NAME} PUBLIC ${ONNX_RUNTIME_SESSION_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${ONNX_RUNTIME_LIB} ${OpenCV_LIBRARIES})
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+
+message("@@ frvf_onnx CMake Finish @@\n\n")
 
 ```
 
 > Code
 
->> src/inference.cpp
+>> src/main.cpp
 
 ```c++
+#include "iostream"
+#include "frvf_onnx.h"
+#include <spdlog/spdlog.h>
+#include "configparser.h"
 
-// https://github.com/microsoft/onnxruntime/blob/v1.8.2/csharp/test/Microsoft.ML.OnnxRuntime.EndToEndTests.Capi/CXX_Api_Sample.cpp
-// https://github.com/microsoft/onnxruntime/blob/v1.8.2/include/onnxruntime/core/session/onnxruntime_cxx_api.h
+// #include "spdlog/sinks/basic_file_sink.h"
+
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
+
+
+int main(int argc, char* argv[]){
+    /**
+     * @brief Construct a new frvf onnx::frvf onnx object and get Instence
+     * @arg model_path, useCUDA, optimizer
+     * @param model_path type string 
+     * @param useCUDA type bool 
+     * @param optimizer type int 
+     * 0 = ORT_DISABLE_ALL : To disable all optimizations
+     * 1 = ORT_ENABLE_BASIC : To enable basic optimizations (Such as redundant node removals) 
+     * 2 = ORT_ENABLE_EXTENDED : To enable extended optimizations(Includes level 1 + more complex optimizations like node fusions)
+     * 3 = ORT_ENABLE_ALL : To Enable All possible optimizations
+     */
+    
+    // auto file_logger = spdlog::basic_logger_mt("basic_logger", "logs/basic.txt");
+    // spdlog::set_default_logger(file_logger);
+    struct Arg
+    {
+        int _B;
+        int _W;
+        int _H;
+        int _C;
+        int _iter;
+        int _acc;
+        int _opti;
+        std::string _model;
+        std::string _engine;
+    };
+    
+    Arg args;
+    CConfigParser config("test.ini");
+	if (config.IsSuccess()) {
+        args._B = config.GetInt("B");
+        args._W = config.GetInt("W");
+        args._H = config.GetInt("H");
+        args._C = config.GetInt("C");
+        args._iter = config.GetInt("ITERATION");
+        args._acc = config.GetInt("ACCELERATOR");
+
+        args._model = config.GetString("MODEL");
+        args._engine = config.GetString("ENGINE");
+	}
+    
+    SPDLOG_INFO("batch size : {}", args._B);
+    SPDLOG_INFO("input width : {}", args._W);
+    SPDLOG_INFO("input height : {}", args._H);
+    SPDLOG_INFO("input channel : {}", args._C);
+    SPDLOG_INFO("iteration number : {}", args._iter);
+    SPDLOG_INFO("accelerator : {}", args._acc);
+    SPDLOG_INFO("model path : {}", args._model);
+    SPDLOG_INFO("optimizer : {}", args._engine);
+    if(args._engine == "onnx"){
+        onnx_frvf::frvf_onnx *onnx;
+        onnx = new onnx_frvf::frvf_onnx("model.onnx", true, 0);
+        std::vector<float> result;
+        float avg_ms = 0.0;
+        for(int i = 0; i < 1000; i++){
+            result.push_back(onnx->do_inference("12.png"));
+        }
+        for(int q = 0; q < result.size(); q++)
+        {
+            avg_ms += result[q];
+        }
+        avg_ms = avg_ms / 1000.0;
+        SPDLOG_CRITICAL("{:03.8f}", avg_ms);
+    }
+    else{
+        return 0;
+    }
+	return 0;
+}
+```
+>> libs/onnxruntime/include/frvf_onnx.h
+```h
+#ifndef __FRVF_ONNX_H__
+#define __FRVF_ONNX_H__
+
+#include <iostream>
 #include <onnxruntime_cxx_api.h>
-
 #include <opencv2/dnn/dnn.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
-
 #include <chrono>
 #include <cmath>
 #include <exception>
@@ -256,6 +428,47 @@ add_subdirectory(src)
 #include <numeric>
 #include <string>
 #include <vector>
+#include "spdlog/spdlog.h"
+
+namespace onnx_frvf{
+    
+    class frvf_onnx
+    {
+    private:
+        Ort::Env *env;
+        Ort::Session *sess;
+        Ort::SessionOptions *sessionOptions;
+        Ort::AllocatorWithDefaultOptions *allocator;
+        GraphOptimizationLevel optimizer_selector(int expression);
+        size_t numInputNodes;
+        const char* inputName;
+        std::vector<int64_t> inputDims;
+        size_t numOutputNodes;
+        const char* outputName;
+        std::vector<int64_t> outputDims;
+        
+        std::vector<const char*> inputNames;
+        std::vector<const char*> outputNames;
+        // std::vector<Ort::Value> inputTensors;
+        // std::vector<Ort::Value> outputTensors;
+
+    public:
+        frvf_onnx(std::string file_path, bool useCUDA, int OPT_OPTION);
+        ~frvf_onnx();
+
+        void _Instance(std::string file_path, bool useCUDA, int OPT_OPTION);
+        float do_inference(std::string imageFilepath);
+    };
+
+}
+
+#endif // __FRVF_ONNX_H__
+```
+>> libs/onnxruntime/frvf_onnx.cpp
+```cpp
+#include <frvf_onnx.h>
+
+using namespace onnx_frvf;
 
 template <typename T>
 T vectorProduct(const std::vector<T>& v)
@@ -263,13 +476,6 @@ T vectorProduct(const std::vector<T>& v)
     return accumulate(v.begin(), v.end(), 1, std::multiplies<T>());
 }
 
-/**
- * @brief Operator overloading for printing vectors
- * @tparam T
- * @param os
- * @param v
- * @return std::ostream&
- */
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
 {
@@ -286,13 +492,7 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
     return os;
 }
 
-/**
- * @brief Print ONNX tensor data type
- * https://github.com/microsoft/onnxruntime/blob/rel-1.6.0/include/onnxruntime/core/session/onnxruntime_c_api.h#L93
- * @param os
- * @param type
- * @return std::ostream&
- */
+
 std::ostream& operator<<(std::ostream& os,
                          const ONNXTensorElementDataType& type)
 {
@@ -358,129 +558,89 @@ std::ostream& operator<<(std::ostream& os,
 }
 
 /**
- * @brief 
+ * @brief Construct a new frvf onnx::frvf onnx object
  * 
- * @param labelFilepath 
- * @return std::vector<std::string> 
+ * @param file_path 
+ * @param useCUDA 
+ * @param OPT_OPTION 
  */
-std::vector<std::string> readLabels(std::string& labelFilepath)
-{
-    std::vector<std::string> labels;
-    std::string line;
-    std::ifstream fp(labelFilepath);
-    while (std::getline(fp, line))
-    {
-        labels.push_back(line);
-    }
-    return labels;
+frvf_onnx::frvf_onnx(std::string file_path, bool useCUDA, int OPT_OPTION){
+    
+    this->_Instance(file_path, useCUDA, OPT_OPTION);
 }
 
-/**
- * @brief 
- * 
- * @param argc 
- * @param argv 
- * @return int 
- */
-int main(int argc, char* argv[])
+GraphOptimizationLevel frvf_onnx::optimizer_selector(int expression){
+    GraphOptimizationLevel a;
+    switch (expression)
+    {
+    case 0:
+        a = GraphOptimizationLevel::ORT_DISABLE_ALL;
+        break;
+    case 1:
+        a = GraphOptimizationLevel::ORT_ENABLE_BASIC;
+        break;
+    case 2:
+        a = GraphOptimizationLevel::ORT_ENABLE_EXTENDED;
+        break;
+    case 3:
+        a = GraphOptimizationLevel::ORT_ENABLE_ALL;
+        break;
+    default:
+        a = GraphOptimizationLevel::ORT_DISABLE_ALL;
+        break;
+    }
+
+    return a;
+}
+
+void frvf_onnx::_Instance(std::string file_path, bool useCUDA, int OPT_OPTION)
 {
-    bool useCUDA{true};
-    const char* useCUDAFlag = "--use_cuda";
-    const char* useCPUFlag = "--use_cpu";
-    if (argc == 1)
-    {
-        useCUDA = false;
-    }
-    else if ((argc == 2) && (strcmp(argv[1], useCUDAFlag) == 0))
-    {
-        useCUDA = true;
-    }
-    else if ((argc == 2) && (strcmp(argv[1], useCPUFlag) == 0))
-    {
-        useCUDA = false;
-    }
-    else if ((argc == 2) && (strcmp(argv[1], useCUDAFlag) != 0))
-    {
-        useCUDA = false;
-    }
-    else
-    {
-        throw std::runtime_error{"Too many arguments."};
-    }
-
+#ifdef _DEBUG_
+    std::string modelFilepath = file_path;
+    std::string instanceName{"ONNX-face-recognition"};
+    sessionOptions = new Ort::SessionOptions;
+    sessionOptions->SetIntraOpNumThreads(1);
     if (useCUDA)
     {
-        std::cout << "Inference Execution Provider: CUDA" << std::endl;
-    }
-    else
-    {
-        std::cout << "Inference Execution Provider: CPU" << std::endl;
-    }
-
-    std::string instanceName{"funzin-face-recognition"};
-    std::string modelFilepath{"../data/models/squeezenet1.1-7.onnx"};
-    std::string imageFilepath{
-        "../data/images/european-bee-eater-2115564_1920.jpg"};
-    std::string labelFilepath{"../data/labels/synset.txt"};
-
-    std::vector<std::string> labels{readLabels(labelFilepath)};
-
-    Ort::Env env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING,
-                 instanceName.c_str());
-    Ort::SessionOptions sessionOptions;
-    sessionOptions.SetIntraOpNumThreads(1);
-    if (useCUDA)
-    {
-        // Using CUDA backend
-        // https://github.com/microsoft/onnxruntime/blob/v1.8.2/include/onnxruntime/core/session/onnxruntime_cxx_api.h#L329
         OrtCUDAProviderOptions cuda_options{0};
-        sessionOptions.AppendExecutionProvider_CUDA(cuda_options);
+        sessionOptions->AppendExecutionProvider_CUDA(cuda_options);
     }
+    env = new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, instanceName.c_str());
 
-    // Sets graph optimization level
-    // Available levels are
-    // ORT_DISABLE_ALL -> To disable all optimizations
-    // ORT_ENABLE_BASIC -> To enable basic optimizations (Such as redundant node removals) 
-    // ORT_ENABLE_EXTENDED -> To enable extended optimizations
-    // (Includes level 1 + more complex optimizations like node fusions)
-    // ORT_ENABLE_ALL -> To Enable All possible optimizations
-    sessionOptions.SetGraphOptimizationLevel(
-        GraphOptimizationLevel::ORT_ENABLE_ALL);
-
-    Ort::Session session(env, modelFilepath.c_str(), sessionOptions);
-
-    Ort::AllocatorWithDefaultOptions allocator;
-
-    size_t numInputNodes = session.GetInputCount();
-    size_t numOutputNodes = session.GetOutputCount();
-
-    std::cout << "Number of Input Nodes: " << numInputNodes << std::endl;
-    std::cout << "Number of Output Nodes: " << numOutputNodes << std::endl;
-
-    const char* inputName = session.GetInputName(0, allocator);
-    std::cout << "Input Name: " << inputName << std::endl;
-
-    Ort::TypeInfo inputTypeInfo = session.GetInputTypeInfo(0);
+    sessionOptions->SetGraphOptimizationLevel(optimizer_selector(OPT_OPTION));
+    sess = new Ort::Session(*env, modelFilepath.c_str(), *sessionOptions);
+    allocator = new Ort::AllocatorWithDefaultOptions;
+    numInputNodes = sess->GetInputCount();
+    numOutputNodes = sess->GetOutputCount();
+    inputName = sess->GetInputName(0, *allocator);
+    Ort::TypeInfo inputTypeInfo = sess->GetInputTypeInfo(0);
     auto inputTensorInfo = inputTypeInfo.GetTensorTypeAndShapeInfo();
-
     ONNXTensorElementDataType inputType = inputTensorInfo.GetElementType();
-    std::cout << "Input Type: " << inputType << std::endl;
-
-    std::vector<int64_t> inputDims = inputTensorInfo.GetShape();
-    std::cout << "Input Dimensions: " << inputDims << std::endl;
-
-    const char* outputName = session.GetOutputName(0, allocator);
-    std::cout << "Output Name: " << outputName << std::endl;
-
-    Ort::TypeInfo outputTypeInfo = session.GetOutputTypeInfo(0);
+    inputDims = inputTensorInfo.GetShape();
+    outputName = sess->GetOutputName(0, *allocator);
+    Ort::TypeInfo outputTypeInfo = sess->GetOutputTypeInfo(0);
     auto outputTensorInfo = outputTypeInfo.GetTensorTypeAndShapeInfo();
-
     ONNXTensorElementDataType outputType = outputTensorInfo.GetElementType();
-    std::cout << "Output Type: " << outputType << std::endl;
+    outputDims = outputTensorInfo.GetShape();
 
-    std::vector<int64_t> outputDims = outputTensorInfo.GetShape();
-    std::cout << "Output Dimensions: " << outputDims << std::endl;
+    SPDLOG_INFO("Number of Input Nodes : {}",numInputNodes);
+    SPDLOG_INFO("Number of Output Nodes : {}",numOutputNodes);
+    SPDLOG_INFO("Input Name : {}",inputName);
+    SPDLOG_INFO("Input Type : {}",inputType);
+    SPDLOG_INFO("Input Dimensions : {} {} {} {}",inputDims[0],inputDims[1],inputDims[2],inputDims[3]);
+    SPDLOG_INFO("Output Name : {}",outputName);
+    SPDLOG_INFO("Output Type : {}",outputType);
+    SPDLOG_INFO("Output Dimensions : {} {} {} {}",outputDims[0],outputDims[1],outputDims[2],outputDims[3]);
 
+    inputNames.push_back(inputName);
+    outputNames.push_back(outputName);
+
+#else
+#endif
+}
+
+float frvf_onnx::do_inference(std::string imageFilepath){
+    cv::Mat imageBGR2= cv::Mat::zeros(1, 1, CV_64F);
     cv::Mat imageBGR = cv::imread(imageFilepath, cv::ImreadModes::IMREAD_COLOR);
     cv::Mat resizedImageBGR, resizedImageRGB, resizedImage, preprocessedImage;
     cv::resize(imageBGR, resizedImageBGR,
@@ -490,33 +650,19 @@ int main(int argc, char* argv[])
                  cv::ColorConversionCodes::COLOR_BGR2RGB);
     resizedImageRGB.convertTo(resizedImage, CV_32F, 1.0 / 255);
 
-    cv::Mat channels[3];
-    cv::split(resizedImage, channels);
-    // Normalization per channel
-    // Normalization parameters obtained from
-    // https://github.com/onnx/models/tree/master/vision/classification/squeezenet
-    channels[0] = (channels[0] - 0.485) / 0.229;
-    channels[1] = (channels[1] - 0.456) / 0.224;
-    channels[2] = (channels[2] - 0.406) / 0.225;
-    cv::merge(channels, 3, resizedImage);
-    // HWC to CHW
     cv::dnn::blobFromImage(resizedImage, preprocessedImage);
 
     size_t inputTensorSize = vectorProduct(inputDims);
     std::vector<float> inputTensorValues(inputTensorSize);
     inputTensorValues.assign(preprocessedImage.begin<float>(),
                              preprocessedImage.end<float>());
-
+                             
     size_t outputTensorSize = vectorProduct(outputDims);
-    assert(("Output tensor size should equal to the label set size.",
-            labels.size() == outputTensorSize));
     std::vector<float> outputTensorValues(outputTensorSize);
 
-    std::vector<const char*> inputNames{inputName};
-    std::vector<const char*> outputNames{outputName};
     std::vector<Ort::Value> inputTensors;
     std::vector<Ort::Value> outputTensors;
-
+    
     Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(
         OrtAllocatorType::OrtArenaAllocator, OrtMemType::OrtMemTypeDefault);
     inputTensors.push_back(Ort::Value::CreateTensor<float>(
@@ -525,47 +671,26 @@ int main(int argc, char* argv[])
     outputTensors.push_back(Ort::Value::CreateTensor<float>(
         memoryInfo, outputTensorValues.data(), outputTensorSize,
         outputDims.data(), outputDims.size()));
+   
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
-    session.Run(Ort::RunOptions{nullptr}, inputNames.data(),
+    sess->Run(Ort::RunOptions{nullptr}, inputNames.data(),
                 inputTensors.data(), 1, outputNames.data(),
                 outputTensors.data(), 1);
 
-    int predId = 0;
-    float activation = 0;
-    float maxActivation = std::numeric_limits<float>::lowest();
-    float expSum = 0;
-    for (int i = 0; i < labels.size(); i++)
+    for (int _i=0; _i < outputDims[1]; _i ++)
     {
-        activation = outputTensorValues.at(i);
-        expSum += std::exp(activation);
-        if (activation > maxActivation)
-        {
-            predId = i;
-            maxActivation = activation;
-        }
+        SPDLOG_TRACE("{}",outputTensorValues.at(_i));
     }
-    std::cout << "Predicted Label ID: " << predId << std::endl;
-    std::cout << "Predicted Label: " << labels.at(predId) << std::endl;
-    std::cout << "Uncalibrated Confidence: " << std::exp(maxActivation) / expSum
-              << std::endl;
 
-    // Measure latency
-    int numTests{100};
-    std::chrono::steady_clock::time_point begin =
-        std::chrono::steady_clock::now();
-    for (int i = 0; i < numTests; i++)
-    {
-        session.Run(Ort::RunOptions{nullptr}, inputNames.data(),
-                    inputTensors.data(), 1, outputNames.data(),
-                    outputTensors.data(), 1);
-    }
-    std::chrono::steady_clock::time_point end =
-        std::chrono::steady_clock::now();
-    std::cout << "Minimum Inference Latency: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(end -
-                                                                       begin)
-                         .count() /
-                     static_cast<float>(numTests)
-              << " ms" << std::endl;
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+    float processtime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+
+    return processtime;
+}
+
+frvf_onnx::~frvf_onnx(){
+    
 }
 ```
