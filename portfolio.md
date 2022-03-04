@@ -10,7 +10,7 @@ type: portfolio
 
 # 👨‍💻 포기를 모르고, 늘 발전하는 최동녘
 
-![Untitled](assets/img/avatar.jpg)
+![Untitled](assets/img/post/portfolio/choidongnyeok.jpg)
 
 ### 😀 Profile
 
