@@ -45,8 +45,6 @@ torch_out = torch.onnx._export(net, inputs, output_onnx, export_params=True, ver
 
 dynamic batch로 설정하고 싶으면 export모델을 사용할 때 option에 dynamic_axes를 설정해 주면 된다.
 
- 
-
 dynamic_axes를 설정해 주는 것 말고 위와 같기 때문에 모델과 output 이름 등등은 같게 설정하였다.
 
 ```python
@@ -166,8 +164,6 @@ if __name__ == "__main__":
 ```
 
 * C++
-
-## Directory Hierarchy
 ```bash
 |—— 12.png
 |—— CMakeLists.txt
@@ -220,9 +216,7 @@ cd ..
 ```
 
 > CMakeFiles
-
 >> CMakeLists.txt
-
 ```cmake
 cmake_minimum_required(VERSION 3.13)
 
@@ -305,7 +299,6 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 ```
 
 >> libs/onnxruntime/CMakeLists.txt
-
 ```cmake
 cmake_minimum_required(VERSION 3.13)
 project(
@@ -334,9 +327,7 @@ message("@@ frvf_onnx CMake Finish @@\n\n")
 ```
 
 > Code
-
 >> src/main.cpp
-
 ```c++
 #include "iostream"
 #include "frvf_onnx.h"
@@ -346,7 +337,6 @@ message("@@ frvf_onnx CMake Finish @@\n\n")
 // #include "spdlog/sinks/basic_file_sink.h"
 
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
-
 
 int main(int argc, char* argv[]){
     /**
