@@ -121,12 +121,12 @@ $sidebar-display: "sidebar-display";
     color: rgba(0,0,0,.7);
     &:hover {
       .nav-link {
-        color: #3e5ecf;
+        color: #f7c273;
       }
     }
     &.active {
       .nav-link {
-        color: #3e5ecf;
+        color: #f7c273;
       }
     }
   }
@@ -548,8 +548,8 @@ footer {
     padding: 0.3rem .5rem;
     margin: 0 .35rem .5rem 0;
     &:hover {
-      background-color: #3e5ecf;
-      border-color: #3e5ecf;
+      background-color: #f7c273;
+      border-color: #f7c273;
       color: #fff;
       transition: none;
     }

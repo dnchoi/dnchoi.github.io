@@ -1,0 +1,1285 @@
+I"&B<h1 id="onnx-runtime-example">ONNX Runtime Example</h1>
+
+<h2 id="1-export-onnx">1. Export ONNX</h2>
+<h3 id="pytorch">pytorch</h3>
+<ul>
+  <li>static batch size</li>
+</ul>
+
+<p>고정된 batch size의 onnx모델로 변환하는 방법은 input tensor의 shape을 넣어줄 때 원하는 size의 batch를 설정해서 export해주면 된다.</p>
+
+<p>모델은 기본적으로 pytorch에서 제공해 주는 resnet18을 load했고, 생성될 onnx 모델의 이름, input과 output 이름, 그리고 input tensor를 원하는 shape로 생성하여 설정했다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchvision.models</span> <span class="k">as</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">net</span><span class="p">.</span><span class="nb">eval</span><span class="p">()</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">'Finished loading model!'</span><span class="p">)</span>
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">device</span><span class="p">(</span><span class="s">"cuda:0"</span><span class="p">)</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">net</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="n">output_onnx</span> <span class="o">=</span> <span class="s">'static.onnx'</span>
+<span class="n">input_names</span> <span class="o">=</span> <span class="p">[</span><span class="s">"input_0"</span><span class="p">]</span>
+<span class="n">output_names</span> <span class="o">=</span> <span class="p">[</span><span class="s">"output_0"</span><span class="p">]</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">).</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="n">torch_out</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">onnx</span><span class="p">.</span><span class="n">_export</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">output_onnx</span><span class="p">,</span> <span class="n">export_params</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> 
+                               <span class="n">input_names</span><span class="o">=</span><span class="n">input_names</span><span class="p">,</span> <span class="n">output_names</span><span class="o">=</span><span class="n">output_names</span><span class="p">,</span> 
+                               <span class="n">opset_version</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><img src="/assets/img/post/onnx-runtime/static.png" alt="static" /></p>
+
+<ul>
+  <li>dynamic batch size</li>
+</ul>
+
+<p>dynamic batch로 설정하고 싶으면 export모델을 사용할 때 option에 dynamic_axes를 설정해 주면 된다.</p>
+
+<p>dynamic_axes를 설정해 주는 것 말고 위와 같기 때문에 모델과 output 이름 등등은 같게 설정하였다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchvision.models</span> <span class="k">as</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">net</span><span class="p">.</span><span class="nb">eval</span><span class="p">()</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">'Finished loading model!'</span><span class="p">)</span>
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">device</span><span class="p">(</span><span class="s">"cuda:0"</span><span class="p">)</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">net</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="n">output_onnx</span> <span class="o">=</span> <span class="s">'dynamic.onnx'</span>
+<span class="n">input_names</span> <span class="o">=</span> <span class="p">[</span><span class="s">"input_0"</span><span class="p">]</span>
+<span class="n">output_names</span> <span class="o">=</span> <span class="p">[</span><span class="s">"output_0"</span><span class="p">]</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">).</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="n">net</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+
+<span class="n">dynamic_axes</span> <span class="o">=</span> <span class="p">{</span><span class="s">'input_0'</span> <span class="p">:</span> <span class="p">{</span><span class="mi">0</span> <span class="p">:</span> <span class="s">'batch_size'</span><span class="p">},</span>
+                    <span class="s">'output_0'</span> <span class="p">:</span> <span class="p">{</span><span class="mi">0</span> <span class="p">:</span> <span class="s">'batch_size'</span><span class="p">}}</span>
+
+<span class="n">torch_out</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">onnx</span><span class="p">.</span><span class="n">_export</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">output_onnx</span><span class="p">,</span> <span class="n">export_params</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                               <span class="n">input_names</span><span class="o">=</span><span class="n">input_names</span><span class="p">,</span> <span class="n">output_names</span><span class="o">=</span><span class="n">output_names</span><span class="p">,</span> 
+                               <span class="n">opset_version</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">dynamic_axes</span> <span class="o">=</span> <span class="n">dynamic_axes</span><span class="p">)</span>
+
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="n">torch_out</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><img src="/assets/img/post/onnx-runtime/dynamic.png" alt="dynamic" /></p>
+
+<h3 id="tensorflow---todo">tensorflow - todo</h3>
+
+<h3 id="keras---todo">keras - todo</h3>
+
+<h2 id="2-inference-onnx-runtime-engine">2. Inference ONNX-Runtime engine</h2>
+
+<h3 id="inference">Inference</h3>
+
+<ul>
+  <li>PYTHON</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+</pre></td><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchvision.transforms</span> <span class="k">as</span> <span class="n">transforms</span>
+
+<span class="kn">import</span> <span class="nn">onnx</span>
+<span class="kn">import</span> <span class="nn">onnxruntime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span> 
+
+<span class="n">logger</span><span class="p">.</span><span class="n">level</span><span class="p">(</span><span class="s">"DEBUG"</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">logger</span><span class="p">.</span><span class="n">catch</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">verify_face</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">trace</span><span class="p">(</span><span class="s">"pytorch: {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">__version__</span><span class="p">))</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">trace</span><span class="p">(</span><span class="s">"onnxruntime: {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">onnxruntime</span><span class="p">.</span><span class="n">__version__</span><span class="p">))</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">trace</span><span class="p">(</span><span class="s">"onnx: {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">onnx</span><span class="p">.</span><span class="n">__version__</span><span class="p">))</span>
+        <span class="n">model_path</span> <span class="o">=</span> <span class="n">model</span>
+        
+        <span class="n">logger</span><span class="p">.</span><span class="n">trace</span><span class="p">(</span><span class="s">"model file is exits : {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">model_path</span><span class="p">)))</span>
+        <span class="n">onnx_model</span> <span class="o">=</span> <span class="n">onnx</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">trace</span><span class="p">(</span><span class="s">"onnx model check : {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">onnx</span><span class="p">.</span><span class="n">checker</span><span class="p">.</span><span class="n">check_model</span><span class="p">(</span><span class="n">onnx_model</span><span class="p">)))</span>
+
+        <span class="bp">self</span><span class="p">.</span><span class="n">ort_session</span> <span class="o">=</span> <span class="n">onnxruntime</span><span class="p">.</span><span class="n">InferenceSession</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="p">.</span><span class="n">to_tensor</span> <span class="o">=</span> <span class="n">transforms</span><span class="p">.</span><span class="n">ToTensor</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">_resize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">model_size</span><span class="p">):</span>
+        <span class="n">_shape</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">shape</span>
+        <span class="n">re</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">model_size</span> <span class="o">!=</span> <span class="n">_shape</span><span class="p">:</span>
+            <span class="n">re</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dsize</span><span class="o">=</span><span class="n">model_size</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">re</span> <span class="o">=</span> <span class="n">img</span>
+        <span class="k">return</span> <span class="n">re</span>
+    
+    <span class="k">def</span> <span class="nf">_tensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_resize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mi">112</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">to_tensor</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="n">output</span><span class="p">.</span><span class="n">unsqueeze_</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">trace</span><span class="p">(</span><span class="n">output</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">ort_inputs</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="p">.</span><span class="n">ort_session</span><span class="p">.</span><span class="n">get_inputs</span><span class="p">()[</span><span class="mi">0</span><span class="p">].</span><span class="n">name</span><span class="p">:</span> <span class="n">output</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">ort_inputs</span>
+    
+    <span class="k">def</span> <span class="nf">to_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tensor</span><span class="p">.</span><span class="n">detach</span><span class="p">().</span><span class="n">cpu</span><span class="p">().</span><span class="n">numpy</span><span class="p">()</span> <span class="k">if</span> <span class="n">tensor</span><span class="p">.</span><span class="n">requires_grad</span> <span class="k">else</span> <span class="n">tensor</span><span class="p">.</span><span class="n">cpu</span><span class="p">().</span><span class="n">numpy</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">do_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
+        <span class="n">ort_outs</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">ort_session</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">_tensor</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>    
+        
+        <span class="k">return</span> <span class="n">ort_outs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">verify</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
+    <span class="n">img_out</span> <span class="o">=</span> <span class="n">verify</span><span class="p">.</span><span class="n">do_inference</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="n">img_out</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">model_path</span> <span class="o">=</span> <span class="s">"model.onnx"</span>
+    <span class="n">_verify</span> <span class="o">=</span> <span class="n">verify_face</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="s">"./DATASET/LFW/lfw-py/lfw_funneled"</span>
+    
+    <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s">"*"</span><span class="p">,</span> <span class="s">"*"</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>    
+        <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">imread</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">foo</span><span class="p">(</span><span class="n">_verify</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<ul>
+  <li>C++</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre></td><td class="rouge-code"><pre>|—— 12.png
+|—— CMakeLists.txt
+|—— build_run.sh
+|—— example.cpp
+|—— libs
+|    |—— configparser
+|        |—— CMakeLists.txt
+|        |—— configparser.cpp
+|        |—— include
+|            |—— configparser.h
+|    |—— onnxruntime
+|        |—— CMakeLists.txt
+|        |—— frvf_onnx.cpp
+|        |—— include
+|            |—— frvf_onnx.h
+|    |—— spdlog
+|        |—— include
+|            |—— spdlog
+|            |—— <span class="nb">.</span>
+|            |—— <span class="nb">.</span>
+|            |—— <span class="nb">.</span>
+|            |—— <span class="nb">.</span>
+|—— main.cpp
+|—— model.onnx
+|—— test.ini
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<blockquote>
+  <p>Build</p>
+  <blockquote>
+    <p>build_run.sh</p>
+  </blockquote>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="rouge-code"><pre><span class="c">#!/bin/sh</span>
+
+<span class="c"># exit on first error</span>
+<span class="nb">set</span> <span class="nt">-e</span>
+<span class="nb">rm</span> <span class="nt">-rf</span> build
+<span class="nb">mkdir</span> <span class="nt">-p</span> build
+<span class="nb">cd </span>build
+
+<span class="c"># Generate a Makefile for GCC (or Clang, depanding on CC/CXX envvar)</span>
+cmake ..
+
+<span class="c"># Build (ie 'make')</span>
+<span class="c"># cmake --build .</span>
+make all
+<span class="nb">cd</span> ..
+
+./build/main
+
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<blockquote>
+  <p>CMakeFiles</p>
+  <blockquote>
+    <p>CMakeLists.txt</p>
+  </blockquote>
+</blockquote>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+</pre></td><td class="rouge-code"><pre><span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.13<span class="p">)</span>
+
+<span class="c1"># 프로젝트 정보</span>
+<span class="nb">project</span><span class="p">(</span>
+  main
+  VERSION 0.1
+  DESCRIPTION <span class="s2">"Face recognition verify test"</span>
+  LANGUAGES CXX
+<span class="p">)</span>
+<span class="nb">add_compile_definitions</span><span class="p">(</span>_DEBUG_<span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_FLAGS <span class="s2">"</span><span class="si">${</span><span class="nv">CMAKE_CXX_FLAGS</span><span class="si">}</span><span class="s2"> -std=c++17"</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_BUILD_TYPE RelWithDebInfo<span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_FLAGS -pthread<span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 14<span class="p">)</span>
+
+<span class="nb">message</span><span class="p">(</span>STATUS CMAKE_BUILD_TYPE<span class="p">)</span>                     <span class="c1"># -- CMAKE_BUILD_TYPE</span>
+<span class="nb">message</span><span class="p">(</span>STATUS <span class="si">${</span><span class="nv">CMAKE_BUILD_TYPE</span><span class="si">}</span><span class="p">)</span>                  <span class="c1"># -- Debug</span>
+<span class="nb">message</span><span class="p">(</span>STATUS <span class="s2">"Configuration: </span><span class="si">${</span><span class="nv">CMAKE_BUILD_TYPE</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="c1"># -- Configuration: Debug</span>
+<span class="nb">message</span><span class="p">(</span>STATUS <span class="s2">"Compiler"</span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span>STATUS <span class="s2">" - ID       </span><span class="se">\t</span><span class="s2">: </span><span class="si">${</span><span class="nv">CMAKE_CXX_COMPILER_ID</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span>STATUS <span class="s2">" - Version  </span><span class="se">\t</span><span class="s2">: </span><span class="si">${</span><span class="nv">CMAKE_CXX_COMPILER_VERSION</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span>STATUS <span class="s2">" - Path     </span><span class="se">\t</span><span class="s2">: </span><span class="si">${</span><span class="nv">CMAKE_CXX_COMPILER</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="nb">set</span> <span class="p">(</span>onnx_Header <span class="s2">"</span><span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span><span class="s2">/libs/onnxruntime/include"</span><span class="p">)</span>
+<span class="nb">set</span> <span class="p">(</span>logger_Header <span class="s2">"</span><span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span><span class="s2">/libs/spdlog/include"</span><span class="p">)</span>
+<span class="nb">set</span> <span class="p">(</span>config_Header <span class="s2">"</span><span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span><span class="s2">/libs/configparser/include"</span><span class="p">)</span>
+
+<span class="nb">message</span><span class="p">(</span><span class="s2">"</span><span class="si">${</span><span class="nv">onnx_Header</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s2">"</span><span class="si">${</span><span class="nv">logger_Header</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s2">"</span><span class="si">${</span><span class="nv">config_Header</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">include_directories</span><span class="p">(</span>
+    <span class="si">${</span><span class="nv">onnx_Header</span><span class="si">}</span>
+    <span class="si">${</span><span class="nv">logger_Header</span><span class="si">}</span>
+    <span class="si">${</span><span class="nv">config_Header</span><span class="si">}</span>
+<span class="p">)</span>
+
+<span class="nb">find_package</span><span class="p">(</span>OpenCV REQUIRED<span class="p">)</span>
+<span class="nb">find_path</span><span class="p">(</span>ONNX_RUNTIME_SESSION_INCLUDE_DIRS onnxruntime_cxx_api.h HINTS /usr/local/include/onnxruntime/core/session/<span class="p">)</span>
+<span class="nb">find_library</span><span class="p">(</span>ONNX_RUNTIME_LIB onnxruntime HINTS /usr/local/lib<span class="p">)</span>
+
+<span class="c1">#INIT</span>
+<span class="c1"># Lib 등록을 위한 작업 -&gt; 해당 Lib Cmake 동작 후 build</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span>
+    libs/onnxruntime
+<span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s2">"ONNX runtime lib"</span><span class="p">)</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span>
+    libs/configparser
+<span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s2">"configparser lib"</span><span class="p">)</span>
+<span class="c1"># add_subdirectory(</span>
+<span class="c1">#     lib/ThreadPool</span>
+<span class="c1"># )</span>
+<span class="c1"># message("Thread pool shared lib build done")</span>
+<span class="c1"># #INIT</span>
+
+<span class="nb">add_executable</span> <span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> main.cpp<span class="p">)</span>
+
+<span class="c1"># include lib file in program</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span>
+    <span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span>
+    frvf_onnx
+    configparser
+    pthread
+<span class="p">)</span>
+<span class="nb">target_include_directories</span><span class="p">(</span>
+    <span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> 
+    PUBLIC 
+        <span class="si">${</span><span class="nv">onnx_Header</span><span class="si">}</span> 
+        <span class="si">${</span><span class="nv">logger_Header</span><span class="si">}</span>
+        <span class="si">${</span><span class="nv">config_Header</span><span class="si">}</span>
+<span class="p">)</span>
+
+<span class="nb">target_compile_features</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC cxx_std_17<span class="p">)</span>
+
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<blockquote>
+  <blockquote>
+    <p>libs/onnxruntime/CMakeLists.txt</p>
+  </blockquote>
+</blockquote>
+
+<div class="language-cmake highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td><td class="rouge-code"><pre><span class="nb">cmake_minimum_required</span><span class="p">(</span>VERSION 3.13<span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span>
+  frvf_onnx
+  VERSION 0.1
+  LANGUAGES CXX
+<span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s2">"@@ frvf_onnx CMake Start @@"</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_BUILD_TYPE RelWithDebInfo<span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span>CMAKE_CXX_STANDARD 14<span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s2">"This lib name : </span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">include_directories</span><span class="p">(</span>include<span class="p">)</span>
+
+<span class="nb">add_library</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> SHARED frvf_onnx.cpp<span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s2">"ONNX RUNTIME INCLUDE DIRS : </span><span class="si">${</span><span class="nv">ONNX_RUNTIME_SESSION_INCLUDE_DIRS</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s2">"OPENCV INCLUDE DIRS : </span><span class="si">${</span><span class="nv">OpenCV_INCLUDE_DIRS</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s2">"ONNX RUNTIME LIB : </span><span class="si">${</span><span class="nv">ONNX_RUNTIME_LIB</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s2">"OpenCV LIBRARIES : </span><span class="si">${</span><span class="nv">OpenCV_LIBRARIES</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC <span class="si">${</span><span class="nv">ONNX_RUNTIME_SESSION_INCLUDE_DIRS</span><span class="si">}</span> <span class="si">${</span><span class="nv">OpenCV_INCLUDE_DIRS</span><span class="si">}</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC <span class="si">${</span><span class="nv">ONNX_RUNTIME_LIB</span><span class="si">}</span> <span class="si">${</span><span class="nv">OpenCV_LIBRARIES</span><span class="si">}</span><span class="p">)</span>
+<span class="nb">target_compile_features</span><span class="p">(</span><span class="si">${</span><span class="nv">PROJECT_NAME</span><span class="si">}</span> PUBLIC cxx_std_17<span class="p">)</span>
+
+<span class="nb">message</span><span class="p">(</span><span class="s2">"@@ frvf_onnx CMake Finish @@</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
+
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<blockquote>
+  <p>Code</p>
+  <blockquote>
+    <p>src/main.cpp</p>
+  </blockquote>
+</blockquote>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+</pre></td><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">"iostream"</span><span class="cp">
+#include</span> <span class="cpf">"frvf_onnx.h"</span><span class="cp">
+#include</span> <span class="cpf">&lt;spdlog/spdlog.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">"configparser.h"</span><span class="cp">
+</span>
+<span class="c1">// #include "spdlog/sinks/basic_file_sink.h"</span>
+
+<span class="cp">#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[]){</span>
+    <span class="cm">/**
+     * @brief Construct a new frvf onnx::frvf onnx object and get Instence
+     * @arg model_path, useCUDA, optimizer
+     * @param model_path type string 
+     * @param useCUDA type bool 
+     * @param optimizer type int 
+     * 0 = ORT_DISABLE_ALL : To disable all optimizations
+     * 1 = ORT_ENABLE_BASIC : To enable basic optimizations (Such as redundant node removals) 
+     * 2 = ORT_ENABLE_EXTENDED : To enable extended optimizations(Includes level 1 + more complex optimizations like node fusions)
+     * 3 = ORT_ENABLE_ALL : To Enable All possible optimizations
+     */</span>
+    
+    <span class="c1">// auto file_logger = spdlog::basic_logger_mt("basic_logger", "logs/basic.txt");</span>
+    <span class="c1">// spdlog::set_default_logger(file_logger);</span>
+    <span class="k">struct</span> <span class="nc">Arg</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">_B</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_W</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_H</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_C</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_iter</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_acc</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_opti</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_model</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_engine</span><span class="p">;</span>
+    <span class="p">};</span>
+    
+    <span class="n">Arg</span> <span class="n">args</span><span class="p">;</span>
+    <span class="n">CConfigParser</span> <span class="n">config</span><span class="p">(</span><span class="s">"test.ini"</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">config</span><span class="p">.</span><span class="n">IsSuccess</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">args</span><span class="p">.</span><span class="n">_B</span> <span class="o">=</span> <span class="n">config</span><span class="p">.</span><span class="n">GetInt</span><span class="p">(</span><span class="s">"B"</span><span class="p">);</span>
+        <span class="n">args</span><span class="p">.</span><span class="n">_W</span> <span class="o">=</span> <span class="n">config</span><span class="p">.</span><span class="n">GetInt</span><span class="p">(</span><span class="s">"W"</span><span class="p">);</span>
+        <span class="n">args</span><span class="p">.</span><span class="n">_H</span> <span class="o">=</span> <span class="n">config</span><span class="p">.</span><span class="n">GetInt</span><span class="p">(</span><span class="s">"H"</span><span class="p">);</span>
+        <span class="n">args</span><span class="p">.</span><span class="n">_C</span> <span class="o">=</span> <span class="n">config</span><span class="p">.</span><span class="n">GetInt</span><span class="p">(</span><span class="s">"C"</span><span class="p">);</span>
+        <span class="n">args</span><span class="p">.</span><span class="n">_iter</span> <span class="o">=</span> <span class="n">config</span><span class="p">.</span><span class="n">GetInt</span><span class="p">(</span><span class="s">"ITERATION"</span><span class="p">);</span>
+        <span class="n">args</span><span class="p">.</span><span class="n">_acc</span> <span class="o">=</span> <span class="n">config</span><span class="p">.</span><span class="n">GetInt</span><span class="p">(</span><span class="s">"ACCELERATOR"</span><span class="p">);</span>
+
+        <span class="n">args</span><span class="p">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">config</span><span class="p">.</span><span class="n">GetString</span><span class="p">(</span><span class="s">"MODEL"</span><span class="p">);</span>
+        <span class="n">args</span><span class="p">.</span><span class="n">_engine</span> <span class="o">=</span> <span class="n">config</span><span class="p">.</span><span class="n">GetString</span><span class="p">(</span><span class="s">"ENGINE"</span><span class="p">);</span>
+	<span class="p">}</span>
+    
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"batch size : {}"</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">_B</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"input width : {}"</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">_W</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"input height : {}"</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">_H</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"input channel : {}"</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">_C</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"iteration number : {}"</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">_iter</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"accelerator : {}"</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">_acc</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"model path : {}"</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">_model</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"optimizer : {}"</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">_engine</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">_engine</span> <span class="o">==</span> <span class="s">"onnx"</span><span class="p">){</span>
+        <span class="n">onnx_frvf</span><span class="o">::</span><span class="n">frvf_onnx</span> <span class="o">*</span><span class="n">onnx</span><span class="p">;</span>
+        <span class="n">onnx</span> <span class="o">=</span> <span class="k">new</span> <span class="n">onnx_frvf</span><span class="o">::</span><span class="n">frvf_onnx</span><span class="p">(</span><span class="s">"model.onnx"</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
+        <span class="kt">float</span> <span class="n">avg_ms</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+            <span class="n">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">onnx</span><span class="o">-&gt;</span><span class="n">do_inference</span><span class="p">(</span><span class="s">"12.png"</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">q</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">q</span> <span class="o">&lt;</span> <span class="n">result</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">q</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">avg_ms</span> <span class="o">+=</span> <span class="n">result</span><span class="p">[</span><span class="n">q</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">avg_ms</span> <span class="o">=</span> <span class="n">avg_ms</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">;</span>
+        <span class="n">SPDLOG_CRITICAL</span><span class="p">(</span><span class="s">"{:03.8f}"</span><span class="p">,</span> <span class="n">avg_ms</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span><span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<blockquote>
+  <blockquote>
+    <p>libs/onnxruntime/include/frvf_onnx.h</p>
+  </blockquote>
+</blockquote>
+
+<pre><code class="language-h">#ifndef __FRVF_ONNX_H__
+#define __FRVF_ONNX_H__
+
+#include &lt;iostream&gt;
+#include &lt;onnxruntime_cxx_api.h&gt;
+#include &lt;opencv2/dnn/dnn.hpp&gt;
+#include &lt;opencv2/imgcodecs.hpp&gt;
+#include &lt;opencv2/imgproc.hpp&gt;
+#include &lt;chrono&gt;
+#include &lt;cmath&gt;
+#include &lt;exception&gt;
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;limits&gt;
+#include &lt;numeric&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include "spdlog/spdlog.h"
+
+namespace onnx_frvf{
+    
+    class frvf_onnx
+    {
+    private:
+        Ort::Env *env;
+        Ort::Session *sess;
+        Ort::SessionOptions *sessionOptions;
+        Ort::AllocatorWithDefaultOptions *allocator;
+        GraphOptimizationLevel optimizer_selector(int expression);
+        size_t numInputNodes;
+        const char* inputName;
+        std::vector&lt;int64_t&gt; inputDims;
+        size_t numOutputNodes;
+        const char* outputName;
+        std::vector&lt;int64_t&gt; outputDims;
+        
+        std::vector&lt;const char*&gt; inputNames;
+        std::vector&lt;const char*&gt; outputNames;
+        // std::vector&lt;Ort::Value&gt; inputTensors;
+        // std::vector&lt;Ort::Value&gt; outputTensors;
+
+    public:
+        frvf_onnx(std::string file_path, bool useCUDA, int OPT_OPTION);
+        ~frvf_onnx();
+
+        void _Instance(std::string file_path, bool useCUDA, int OPT_OPTION);
+        float do_inference(std::string imageFilepath);
+    };
+
+}
+
+#endif // __FRVF_ONNX_H__
+</code></pre>
+<blockquote>
+  <blockquote>
+    <p>libs/onnxruntime/frvf_onnx.cpp</p>
+  </blockquote>
+</blockquote>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+</pre></td><td class="rouge-code"><pre><span class="cp">#include</span> <span class="cpf">&lt;frvf_onnx.h&gt;</span><span class="cp">
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">onnx_frvf</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">T</span> <span class="nf">vectorProduct</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="nc">T</span><span class="p">&gt;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">v</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"["</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">", "</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"]"</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span>
+                         <span class="k">const</span> <span class="n">ONNXTensorElementDataType</span><span class="o">&amp;</span> <span class="n">type</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_UNDEFINED</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"undefined"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"float"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT8</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"uint8_t"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_INT8</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"int8_t"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT16</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"uint16_t"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_INT16</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"int16_t"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_INT32</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"int32_t"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_INT64</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"int64_t"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_STRING</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"std::string"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_BOOL</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"bool"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT16</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"float16"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_DOUBLE</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"double"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT32</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"uint32_t"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_UINT64</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"uint64_t"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_COMPLEX64</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"float real + float imaginary"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span>
+            <span class="nl">ONNX_TENSOR_ELEMENT_DATA_TYPE_COMPLEX128:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"double real + float imaginary"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">ONNXTensorElementDataType</span><span class="o">::</span><span class="n">ONNX_TENSOR_ELEMENT_DATA_TYPE_BFLOAT16</span><span class="p">:</span>
+            <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">"bfloat16"</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="nl">default:</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="err">}</span>
+
+    <span class="k">return</span> <span class="n">os</span><span class="p">;</span>
+<span class="err">}</span>
+
+<span class="cm">/**
+ * @brief Construct a new frvf onnx::frvf onnx object
+ * 
+ * @param file_path 
+ * @param useCUDA 
+ * @param OPT_OPTION 
+ */</span>
+<span class="n">frvf_onnx</span><span class="o">::</span><span class="n">frvf_onnx</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">file_path</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">useCUDA</span><span class="p">,</span> <span class="kt">int</span> <span class="n">OPT_OPTION</span><span class="p">)</span><span class="err">{</span>
+    
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_Instance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">useCUDA</span><span class="p">,</span> <span class="n">OPT_OPTION</span><span class="p">);</span>
+<span class="err">}</span>
+
+<span class="n">GraphOptimizationLevel</span> <span class="n">frvf_onnx</span><span class="o">::</span><span class="n">optimizer_selector</span><span class="p">(</span><span class="kt">int</span> <span class="n">expression</span><span class="p">)</span><span class="err">{</span>
+    <span class="n">GraphOptimizationLevel</span> <span class="n">a</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+    <span class="err">{</span>
+    <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">GraphOptimizationLevel</span><span class="o">::</span><span class="n">ORT_DISABLE_ALL</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">GraphOptimizationLevel</span><span class="o">::</span><span class="n">ORT_ENABLE_BASIC</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">GraphOptimizationLevel</span><span class="o">::</span><span class="n">ORT_ENABLE_EXTENDED</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">GraphOptimizationLevel</span><span class="o">::</span><span class="n">ORT_ENABLE_ALL</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="nl">default:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">GraphOptimizationLevel</span><span class="o">::</span><span class="n">ORT_DISABLE_ALL</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="err">}</span>
+
+    <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+<span class="err">}</span>
+
+<span class="kt">void</span> <span class="n">frvf_onnx</span><span class="o">::</span><span class="n">_Instance</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">file_path</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">useCUDA</span><span class="p">,</span> <span class="kt">int</span> <span class="n">OPT_OPTION</span><span class="p">)</span>
+<span class="err">{</span>
+<span class="cp">#ifdef _DEBUG_
+</span>    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">modelFilepath</span> <span class="o">=</span> <span class="n">file_path</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">instanceName</span><span class="err">{</span><span class="s">"ONNX-face-recognition"</span><span class="err">}</span><span class="p">;</span>
+    <span class="n">sessionOptions</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ort</span><span class="o">::</span><span class="n">SessionOptions</span><span class="p">;</span>
+    <span class="n">sessionOptions</span><span class="o">-&gt;</span><span class="n">SetIntraOpNumThreads</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">useCUDA</span><span class="p">)</span>
+    <span class="err">{</span>
+        <span class="n">OrtCUDAProviderOptions</span> <span class="n">cuda_options</span><span class="err">{</span><span class="mi">0</span><span class="err">}</span><span class="p">;</span>
+        <span class="n">sessionOptions</span><span class="o">-&gt;</span><span class="n">AppendExecutionProvider_CUDA</span><span class="p">(</span><span class="n">cuda_options</span><span class="p">);</span>
+    <span class="err">}</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ort</span><span class="o">::</span><span class="n">Env</span><span class="p">(</span><span class="n">OrtLoggingLevel</span><span class="o">::</span><span class="n">ORT_LOGGING_LEVEL_WARNING</span><span class="p">,</span> <span class="n">instanceName</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+
+    <span class="n">sessionOptions</span><span class="o">-&gt;</span><span class="n">SetGraphOptimizationLevel</span><span class="p">(</span><span class="n">optimizer_selector</span><span class="p">(</span><span class="n">OPT_OPTION</span><span class="p">));</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ort</span><span class="o">::</span><span class="n">Session</span><span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">modelFilepath</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="o">*</span><span class="n">sessionOptions</span><span class="p">);</span>
+    <span class="n">allocator</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ort</span><span class="o">::</span><span class="n">AllocatorWithDefaultOptions</span><span class="p">;</span>
+    <span class="n">numInputNodes</span> <span class="o">=</span> <span class="n">sess</span><span class="o">-&gt;</span><span class="n">GetInputCount</span><span class="p">();</span>
+    <span class="n">numOutputNodes</span> <span class="o">=</span> <span class="n">sess</span><span class="o">-&gt;</span><span class="n">GetOutputCount</span><span class="p">();</span>
+    <span class="n">inputName</span> <span class="o">=</span> <span class="n">sess</span><span class="o">-&gt;</span><span class="n">GetInputName</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">allocator</span><span class="p">);</span>
+    <span class="n">Ort</span><span class="o">::</span><span class="n">TypeInfo</span> <span class="n">inputTypeInfo</span> <span class="o">=</span> <span class="n">sess</span><span class="o">-&gt;</span><span class="n">GetInputTypeInfo</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">inputTensorInfo</span> <span class="o">=</span> <span class="n">inputTypeInfo</span><span class="p">.</span><span class="n">GetTensorTypeAndShapeInfo</span><span class="p">();</span>
+    <span class="n">ONNXTensorElementDataType</span> <span class="n">inputType</span> <span class="o">=</span> <span class="n">inputTensorInfo</span><span class="p">.</span><span class="n">GetElementType</span><span class="p">();</span>
+    <span class="n">inputDims</span> <span class="o">=</span> <span class="n">inputTensorInfo</span><span class="p">.</span><span class="n">GetShape</span><span class="p">();</span>
+    <span class="n">outputName</span> <span class="o">=</span> <span class="n">sess</span><span class="o">-&gt;</span><span class="n">GetOutputName</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">allocator</span><span class="p">);</span>
+    <span class="n">Ort</span><span class="o">::</span><span class="n">TypeInfo</span> <span class="n">outputTypeInfo</span> <span class="o">=</span> <span class="n">sess</span><span class="o">-&gt;</span><span class="n">GetOutputTypeInfo</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">outputTensorInfo</span> <span class="o">=</span> <span class="n">outputTypeInfo</span><span class="p">.</span><span class="n">GetTensorTypeAndShapeInfo</span><span class="p">();</span>
+    <span class="n">ONNXTensorElementDataType</span> <span class="n">outputType</span> <span class="o">=</span> <span class="n">outputTensorInfo</span><span class="p">.</span><span class="n">GetElementType</span><span class="p">();</span>
+    <span class="n">outputDims</span> <span class="o">=</span> <span class="n">outputTensorInfo</span><span class="p">.</span><span class="n">GetShape</span><span class="p">();</span>
+
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"Number of Input Nodes : {}"</span><span class="p">,</span><span class="n">numInputNodes</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"Number of Output Nodes : {}"</span><span class="p">,</span><span class="n">numOutputNodes</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"Input Name : {}"</span><span class="p">,</span><span class="n">inputName</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"Input Type : {}"</span><span class="p">,</span><span class="n">inputType</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"Input Dimensions : {} {} {} {}"</span><span class="p">,</span><span class="n">inputDims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">inputDims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">inputDims</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">inputDims</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"Output Name : {}"</span><span class="p">,</span><span class="n">outputName</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"Output Type : {}"</span><span class="p">,</span><span class="n">outputType</span><span class="p">);</span>
+    <span class="n">SPDLOG_INFO</span><span class="p">(</span><span class="s">"Output Dimensions : {} {} {} {}"</span><span class="p">,</span><span class="n">outputDims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">outputDims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">outputDims</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">outputDims</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+
+    <span class="n">inputNames</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">inputName</span><span class="p">);</span>
+    <span class="n">outputNames</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">outputName</span><span class="p">);</span>
+
+<span class="cp">#else
+#endif
+</span><span class="err">}</span>
+
+<span class="kt">float</span> <span class="n">frvf_onnx</span><span class="o">::</span><span class="n">do_inference</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">imageFilepath</span><span class="p">)</span><span class="err">{</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">imageBGR2</span><span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span><span class="o">::</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CV_64F</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">imageBGR</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">imread</span><span class="p">(</span><span class="n">imageFilepath</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">ImreadModes</span><span class="o">::</span><span class="n">IMREAD_COLOR</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">resizedImageBGR</span><span class="p">,</span> <span class="n">resizedImageRGB</span><span class="p">,</span> <span class="n">resizedImage</span><span class="p">,</span> <span class="n">preprocessedImage</span><span class="p">;</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">resize</span><span class="p">(</span><span class="n">imageBGR</span><span class="p">,</span> <span class="n">resizedImageBGR</span><span class="p">,</span>
+               <span class="n">cv</span><span class="o">::</span><span class="n">Size</span><span class="p">(</span><span class="n">inputDims</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">inputDims</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
+               <span class="n">cv</span><span class="o">::</span><span class="n">InterpolationFlags</span><span class="o">::</span><span class="n">INTER_CUBIC</span><span class="p">);</span>
+    <span class="n">cv</span><span class="o">::</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">resizedImageBGR</span><span class="p">,</span> <span class="n">resizedImageRGB</span><span class="p">,</span>
+                 <span class="n">cv</span><span class="o">::</span><span class="n">ColorConversionCodes</span><span class="o">::</span><span class="n">COLOR_BGR2RGB</span><span class="p">);</span>
+    <span class="n">resizedImageRGB</span><span class="p">.</span><span class="n">convertTo</span><span class="p">(</span><span class="n">resizedImage</span><span class="p">,</span> <span class="n">CV_32F</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mi">255</span><span class="p">);</span>
+
+    <span class="n">cv</span><span class="o">::</span><span class="n">dnn</span><span class="o">::</span><span class="n">blobFromImage</span><span class="p">(</span><span class="n">resizedImage</span><span class="p">,</span> <span class="n">preprocessedImage</span><span class="p">);</span>
+
+    <span class="kt">size_t</span> <span class="n">inputTensorSize</span> <span class="o">=</span> <span class="n">vectorProduct</span><span class="p">(</span><span class="n">inputDims</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">inputTensorValues</span><span class="p">(</span><span class="n">inputTensorSize</span><span class="p">);</span>
+    <span class="n">inputTensorValues</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">preprocessedImage</span><span class="p">.</span><span class="n">begin</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(),</span>
+                             <span class="n">preprocessedImage</span><span class="p">.</span><span class="n">end</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">());</span>
+                             
+    <span class="kt">size_t</span> <span class="n">outputTensorSize</span> <span class="o">=</span> <span class="n">vectorProduct</span><span class="p">(</span><span class="n">outputDims</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">outputTensorValues</span><span class="p">(</span><span class="n">outputTensorSize</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Ort</span><span class="o">::</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">inputTensors</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Ort</span><span class="o">::</span><span class="n">Value</span><span class="o">&gt;</span> <span class="n">outputTensors</span><span class="p">;</span>
+    
+    <span class="n">Ort</span><span class="o">::</span><span class="n">MemoryInfo</span> <span class="n">memoryInfo</span> <span class="o">=</span> <span class="n">Ort</span><span class="o">::</span><span class="n">MemoryInfo</span><span class="o">::</span><span class="n">CreateCpu</span><span class="p">(</span>
+        <span class="n">OrtAllocatorType</span><span class="o">::</span><span class="n">OrtArenaAllocator</span><span class="p">,</span> <span class="n">OrtMemType</span><span class="o">::</span><span class="n">OrtMemTypeDefault</span><span class="p">);</span>
+    <span class="n">inputTensors</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Ort</span><span class="o">::</span><span class="n">Value</span><span class="o">::</span><span class="n">CreateTensor</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span>
+        <span class="n">memoryInfo</span><span class="p">,</span> <span class="n">inputTensorValues</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">inputTensorSize</span><span class="p">,</span> <span class="n">inputDims</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span>
+        <span class="n">inputDims</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+    <span class="n">outputTensors</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Ort</span><span class="o">::</span><span class="n">Value</span><span class="o">::</span><span class="n">CreateTensor</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span>
+        <span class="n">memoryInfo</span><span class="p">,</span> <span class="n">outputTensorValues</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">outputTensorSize</span><span class="p">,</span>
+        <span class="n">outputDims</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">outputDims</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+   
+    <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">steady_clock</span><span class="o">::</span><span class="n">time_point</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">steady_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
+
+    <span class="n">sess</span><span class="o">-&gt;</span><span class="n">Run</span><span class="p">(</span><span class="n">Ort</span><span class="o">::</span><span class="n">RunOptions</span><span class="err">{</span><span class="nb">nullptr</span><span class="err">}</span><span class="p">,</span> <span class="n">inputNames</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span>
+                <span class="n">inputTensors</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">outputNames</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span>
+                <span class="n">outputTensors</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">_i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">_i</span> <span class="o">&lt;</span> <span class="n">outputDims</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="n">_i</span> <span class="o">++</span><span class="p">)</span>
+    <span class="err">{</span>
+        <span class="n">SPDLOG_TRACE</span><span class="p">(</span><span class="s">"{}"</span><span class="p">,</span><span class="n">outputTensorValues</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">_i</span><span class="p">));</span>
+    <span class="err">}</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">steady_clock</span><span class="o">::</span><span class="n">time_point</span> <span class="n">end</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">steady_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
+
+    <span class="kt">float</span> <span class="n">processtime</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">begin</span><span class="p">).</span><span class="n">count</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="n">processtime</span><span class="p">;</span>
+<span class="err">}</span>
+
+<span class="n">frvf_onnx</span><span class="o">::~</span><span class="n">frvf_onnx</span><span class="p">()</span><span class="err">{</span>
+    
+<span class="err">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET

@@ -1,0 +1,109 @@
+I"T<h1 id="ros-multi-device-connected-setting">ROS Multi-device connected setting</h1>
+
+<h2 id="1-host-ip-and-client-ip-check">1. Host IP and Client IP check</h2>
+<ul>
+  <li>Host</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td> --><td class="rouge-code"><pre>ifconfig
+
+enp7s0: <span class="nv">flags</span><span class="o">=</span>4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 192.168.0.55  netmask 255.255.255.0  broadcast 192.168.0.55
+        inet6 fc00::642:1aff:fe9a:4faf  prefixlen 64  scopeid 0x0&lt;global&gt;
+        inet6 fe80::642:1aff:fe9a:4faf  prefixlen 64  scopeid 0x20&lt;<span class="nb">link</span><span class="o">&gt;</span>
+        ether 04:42:1a:9a:4f:af  txqueuelen 1000  <span class="o">(</span>Ethernet<span class="o">)</span>
+        RX packets 936613605  bytes 318059576117 <span class="o">(</span>318.0 GB<span class="o">)</span>
+        RX errors 0  dropped 193585  overruns 0  frame 0
+        TX packets 1024147669  bytes 325361687105 <span class="o">(</span>325.3 GB<span class="o">)</span>
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<ul>
+  <li>Client</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td> --><td class="rouge-code"><pre>ifconfig
+
+eth0: <span class="nv">flags</span><span class="o">=</span>4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 192.168.1.109  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fc00::e6b5:f1d1:5649:da40  prefixlen 64  scopeid 0x0&lt;global&gt;
+        inet6 fe80::2225:b6aa:8dbd:b3fb  prefixlen 64  scopeid 0x20&lt;<span class="nb">link</span><span class="o">&gt;</span>
+        ether 48:b0:2d:2f:8a:ae  txqueuelen 1000  <span class="o">(</span>Ethernet<span class="o">)</span>
+        RX packets 24629  bytes 3455618 <span class="o">(</span>3.4 MB<span class="o">)</span>
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 563  bytes 58590 <span class="o">(</span>58.5 KB<span class="o">)</span>
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+        device interrupt 37
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="2-setting-bashrc">2. Setting .bashrc</h2>
+<ul>
+  <li>Host</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td> --><td class="rouge-code"><pre><span class="nb">.</span>
+<span class="nb">.</span>
+<span class="nb">.</span>
+
+<span class="nb">export </span><span class="nv">ROS_HOME</span><span class="o">=</span><span class="nv">$PWD</span>
+<span class="nb">export </span><span class="nv">ROS_IP</span><span class="o">=</span>192.168.0.55
+<span class="nb">export </span><span class="nv">ROS_MASTER_URI</span><span class="o">=</span>http://192.168.0.55:11311
+<span class="nb">export </span><span class="nv">ROS_HOSTNAME</span><span class="o">=</span><span class="nv">$ROS_IP</span>
+
+<span class="nb">source</span> ~/.bashrc
+</pre></td></tr></tbody></table></code></pre></div></div>
+<ul>
+  <li>Client</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td> --><td class="rouge-code"><pre><span class="nb">.</span>
+<span class="nb">.</span>
+<span class="nb">.</span>
+
+<span class="nb">export </span><span class="nv">ROS_IP</span><span class="o">=</span>192.168.0.56
+<span class="nb">export </span><span class="nv">ROS_MASTER_URI</span><span class="o">=</span>http://192.168.0.55:11311
+
+<span class="nb">source</span> ~/.bashrc
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET
