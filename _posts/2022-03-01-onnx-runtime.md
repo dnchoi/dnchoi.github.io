@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ONNX runtime example
+title: ONNX runtime
 author: dnchoi
 date: 2022-03-01 09:45:47
 categories: [onnx, python, c++]
