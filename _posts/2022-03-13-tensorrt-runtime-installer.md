@@ -46,6 +46,7 @@ ModuleNotFoundError: No module named 'tensorrt'
 ```
 
 > Installed
+
 ```bash
 python3
 
