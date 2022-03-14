@@ -2,7 +2,7 @@
 layout: post
 title: TensorRT runtime
 author: dnchoi
-date: 2022-03-14 09:45:47
+date: 2022-03-13 09:45:47
 categories: [tensorrt, python, c++]
 tags: [tensorrt, python, c++]
 ---
