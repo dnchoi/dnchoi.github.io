@@ -3,8 +3,8 @@ layout: post
 title: ONNX runtime install
 author: dnchoi
 date: 2022-03-01 09:45:47
-categories: [onnx, python, c++]
-tags: [onnx, python, c++]
+categories: [onnx, install]
+tags: [onnx, install]
 ---
 
 # ONNX runtime install
