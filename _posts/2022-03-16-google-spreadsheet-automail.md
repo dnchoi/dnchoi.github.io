@@ -16,7 +16,7 @@ tags: [etc]
 2. 이름이 지정된 범위
 3. 범위 추가
 
-![Untitled_1](assets/img/post/google-spreadsheet/Untitled_1.png)
+![Untitled_1](/assets/img/post/google-spreadsheet/Untitled_1.png)
 
 |:---:|
 |Stock 제목|
@@ -24,6 +24,7 @@ tags: [etc]
 
 ## 3. Create Apps Script
 > myFunction.gs
+
 ```javascript
 function myFunction() {
   sendEmail()
@@ -148,10 +149,10 @@ function getEmailHtml(stockData,stockColor) {
   var htmlBody = htmlTemplate.evaluate().getContent();
   return htmlBody;
 }
-
 ```
 
 > Template.html
+
 ```html
 <!DOCTYPE html>
 <html>
