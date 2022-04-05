@@ -28,6 +28,19 @@ pip3 install uff/uff-0.6.9-py2.py3-none-any.whl
 pip3 install graphsurgeon/graphsurgeon-0.4.5-py2.py3-none-any.whl
 ```
 
+## 2. TensorRT library path
+```bash
+nano ~/.bashrc
+
+'
+'
+'
+
+export TRT_PATH="/home/ubuntu/Downloads/TensorRT-*.Ubuntu-*.x86_64-gnu.cuda-11.1.cudnn8.1"
+
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:/TRT_PATH
+```
+
 ## 2. Checked TensorRT
 
 > Not installed
