@@ -63,8 +63,8 @@ pip install onnx==1.10.1
 
 ``` bash
 #!/bin/bash
-ONNXRUNTIME_VERSION = 1.8.2
-NUM_JOBS = 16
+ONNXRUNTIME_VERSION=1.8.2
+NUM_JOBS=16
 
 git clone --recursive --branch v${ONNXRUNTIME_VERSION} https://github.com/Microsoft/onnxruntime.git
 cd onnxruntime
