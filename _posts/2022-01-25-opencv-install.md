@@ -109,3 +109,10 @@ sudo make install
 pkg-config --modversion opencv
 pkg-config -libs -cflags opencv
 ```
+
+## 7. Conda env install opencv because using gstreamer
+
+```bash
+conda install -c menpo opencv
+```
+
