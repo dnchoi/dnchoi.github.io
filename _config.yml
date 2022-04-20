@@ -82,6 +82,8 @@ markdown: kramdown
 
 highlighter: rouge
 
+futrue: true
+
 kramdown:
   input: GFM
   syntax_highlighter: rouge
