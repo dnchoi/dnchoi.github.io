@@ -1,3 +1,11 @@
+---
+layout: post
+title: Python Unzip module
+author: dnchoi
+date: 2022-05-11 09:45:47
+categories: [etc]
+tags: [etc]
+---
 # Python unzip module with 한글
 
 ## 작성 개요
