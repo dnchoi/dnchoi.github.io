@@ -71,7 +71,7 @@ if __name__ == "__main__":
     main()
 ```
 
-사용 방법은 다음과 같다.
+사용 방법은 다음과 같다
 
 - Dependency
     - tqdm
