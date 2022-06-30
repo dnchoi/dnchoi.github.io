@@ -1,0 +1,363 @@
+<!DOCTYPE html><html lang="en" mode="light" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="theme" content="Chirpy v2.5.1"><meta name="google-site-verification" content="ADnLC0IeVgMa6OjbbqiE36ym_6ZmRiyEYXoege314pM" /><meta name="generator" content="Jekyll v4.2.2" /><meta property="og:title" content="Google Spread sheet &amp; Auto send to mail" /><meta name="author" content="dnchoi" /><meta property="og:locale" content="en_US" /><meta name="description" content="Google Spread sheet &amp; Auto send to mail" /><meta property="og:description" content="Google Spread sheet &amp; Auto send to mail" /><link rel="canonical" href="https://dnchoi.github.io//posts/google-spreadsheet-automail/" /><meta property="og:url" content="https://dnchoi.github.io//posts/google-spreadsheet-automail/" /><meta property="og:site_name" content="Know How &amp; Where" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2022-03-13T18:45:47+09:00" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"description":"Google Spread sheet &amp; Auto send to mail","@type":"BlogPosting","url":"https://dnchoi.github.io//posts/google-spreadsheet-automail/","headline":"Google Spread sheet &amp; Auto send to mail","datePublished":"2022-03-13T18:45:47+09:00","dateModified":"2022-03-13T18:45:47+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://dnchoi.github.io//posts/google-spreadsheet-automail/"},"author":{"@type":"Person","name":"dnchoi"},"@context":"https://schema.org"}</script><title>Google Spread sheet & Auto send to mail | Know How & Where</title><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico" type="image/x-icon"><link rel="icon" href="/assets/img/favicons/favicon.ico" type="image/x-icon"><link rel="apple-touch-icon" href="/assets/img/favicons/apple-icon.png"><link rel="apple-touch-icon" href="/assets/img/favicons/apple-icon-precomposed.png"><link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-icon-57x57.png"><link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-icon-60x60.png"><link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-icon-72x72.png"><link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-icon-76x76.png"><link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicons/apple-icon-114x114.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicons/apple-icon-120x120.png"><link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicons/apple-icon-144x144.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicons/apple-icon-152x152.png"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-icon-180x180.png"><link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicons/android-icon-192x192.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/manifest.json"><meta name='msapplication-config' content='/assets/img/favicons/browserconfig.xml'><meta name="msapplication-TileColor" content="#ffffff"><meta name="msapplication-TileImage" content="/assets/img/favicons/ms-icon-144x144.png"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="cdn.jsdelivr.net"><link rel="dns-prefetch" href="cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha256-LA89z+k9fjgMKQ/kq4OO2Mrf8VltYml/VES+Rg0fh20=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous"><link rel="preload" as="style" href="/assets/css/post.css"><link rel="stylesheet" href="/assets/css/post.css"><link rel="preload" as="style" href="/assets/css/lib/bootstrap-toc.min.css"><link rel="stylesheet" href="/assets/css/lib/bootstrap-toc.min.css" /> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script async src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.15.0,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script async src="/assets/js/post.min.js"></script> <script defer src="/app.js"></script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column"><div id="nav-wrapper"><div id="profile-wrapper" class="d-flex flex-column"><div id="avatar" class="d-flex justify-content-center"> <a href="/" alt="avatar"> <img src="/assets/img/avatar.jpg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="profile-text mt-3"><div class="site-title"> <a href="/">Know How & Where</a></div><div class="site-subtitle font-italic">DL / ML / Vision Developer</div></div></div><ul class="nav flex-column"><li class="nav-item d-flex justify-content-center "> <a href="/" class="nav-link d-flex justify-content-center align-items-center w-100"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item d-flex justify-content-center "> <a href="/tabs/categories/" class="nav-link d-flex justify-content-center align-items-center w-100"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item d-flex justify-content-center "> <a href="/tabs/tags/" class="nav-link d-flex justify-content-center align-items-center w-100"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item d-flex justify-content-center "> <a href="/tabs/archives/" class="nav-link d-flex justify-content-center align-items-center w-100"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a></ul></div><div class="sidebar-bottom d-flex flex-wrap justify-content-around mt-4"> <a href="https://github.com/dnchoi" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['dongnyeokc','gmail.com'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="https://www.linkedin.com/in/dongnyeok-choi-266957188/" aria-label="linkedin" target="_blank" rel="noopener"> <i class="fab fa-linkedin"></i> </a> <a href=" /feed.xml" aria-label="rss" target="_blank" rel="noopener"> <i class="resume.jpg"></i> </a></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Posts </a> </span> <span>Google Spread sheet & Auto send to mail</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>Google Spread sheet & Auto send to mail</h1><div class="post-meta text-muted d-flex flex-column"><div> Posted <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Sun, Mar 13, 2022, 6:45 PM +0900" > Mar 13 <i class="unloaded">2022-03-13T18:45:47+09:00</i> </span> by <span class="author"> dnchoi </span></div><div> Updated <span class="timeago lastmod" data-toggle="tooltip" data-placement="bottom" title="Wed, Mar 16, 2022, 11:29 PM +0900" > Mar 16 <i class="unloaded">2022-03-16T23:29:06+09:00</i> </span></div></div><div class="post-content"><h1 id="google-spread-sheet--auto-send-to-mail">Google Spread sheet &amp; Auto send to mail</h1><h2 id="1-google-api-registration">1. Google API registration</h2><h2 id="2-name-the-scope-in-google-spread-sheet">2. Name the scope in google spread sheet</h2><h3 id="전송하고자-하는-범위를-지정해야한다">전송하고자 하는 범위를 지정해야한다.</h3><ol><li>상단의 데이터 탭<li>이름이 지정된 범위<li>범위 추가</ol><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 " data-src="/assets/img/post/google-spreadsheet/Untitled_1.png" alt="Untitled_1" /></p><div class="table-wrapper"><table><tbody><tr><td>Stock 제목<tr><td>사용할 sheet!범위A:범위B</table></div><h2 id="3-create-apps-script">3. Create Apps Script</h2><blockquote><p>myFunction.gs</p></blockquote><div class="language-javascript highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+</pre><td class="rouge-code"><pre><span class="kd">function</span> <span class="nx">myFunction</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">sendEmail</span><span class="p">()</span>
+<span class="p">}</span>
+ 
+<span class="kd">function</span> <span class="nx">sendEmail</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">stockData</span> <span class="o">=</span> <span class="nx">getData</span><span class="p">(</span><span class="dl">"</span><span class="s2">table</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Stocks</span><span class="dl">"</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">stockData2</span> <span class="o">=</span> <span class="nx">getData</span><span class="p">(</span><span class="dl">"</span><span class="s2">2022</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">send_day</span><span class="dl">"</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+  <span class="c1">// console.warn(stockData2)</span>
+  <span class="kd">var</span> <span class="nx">stockColor</span> <span class="o">=</span> <span class="nx">getColor</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="nx">getEmailText</span><span class="p">(</span><span class="nx">stockData2</span><span class="p">,</span><span class="nx">stockColor</span><span class="p">);</span>
+  <span class="c1">// console.warn(body)</span>
+  <span class="kd">var</span> <span class="nx">htmlBody</span> <span class="o">=</span> <span class="nx">getEmailHtml</span><span class="p">(</span><span class="nx">stockData</span><span class="p">,</span><span class="nx">stockColor</span><span class="p">);</span>
+  <span class="c1">// console.warn(htmlBody)</span>
+  <span class="kd">let</span> <span class="nx">today</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>   
+
+  <span class="kd">var</span> <span class="nx">week</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="dl">"</span><span class="s2">일</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">월</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">화</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">수</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">목</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">금</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">토</span><span class="dl">"</span><span class="p">)</span>
+  <span class="kd">let</span> <span class="nx">year</span> <span class="o">=</span> <span class="nx">today</span><span class="p">.</span><span class="nx">getFullYear</span><span class="p">();</span> <span class="c1">// 년도</span>
+  <span class="kd">let</span> <span class="nx">month</span> <span class="o">=</span> <span class="nx">today</span><span class="p">.</span><span class="nx">getMonth</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>  <span class="c1">// 월</span>
+  <span class="kd">let</span> <span class="nx">date</span> <span class="o">=</span> <span class="nx">today</span><span class="p">.</span><span class="nx">getDate</span><span class="p">();</span>  <span class="c1">// 날짜</span>
+  <span class="kd">let</span> <span class="nx">day</span> <span class="o">=</span> <span class="nx">today</span><span class="p">.</span><span class="nx">getDay</span><span class="p">();</span>  <span class="c1">// 요일</span>
+
+  <span class="kd">let</span> <span class="nx">key</span> <span class="o">=</span> <span class="kc">false</span>
+  <span class="kd">var</span> <span class="nx">que</span> <span class="o">=</span> <span class="kc">null</span>
+  <span class="nx">stockData2</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="dl">"</span><span class="s2">공휴일</span><span class="dl">"</span><span class="p">]</span>
+    <span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="dl">"</span><span class="s2">날짜</span><span class="dl">"</span><span class="p">].</span><span class="nx">getFullYear</span><span class="p">();</span> <span class="c1">// 년도</span>
+    <span class="kd">let</span> <span class="nx">m</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="dl">"</span><span class="s2">날짜</span><span class="dl">"</span><span class="p">].</span><span class="nx">getMonth</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>  <span class="c1">// 월</span>
+    <span class="kd">let</span> <span class="nx">da</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="dl">"</span><span class="s2">날짜</span><span class="dl">"</span><span class="p">].</span><span class="nx">getDate</span><span class="p">();</span>  <span class="c1">// 날짜</span>
+    <span class="kd">let</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="dl">"</span><span class="s2">날짜</span><span class="dl">"</span><span class="p">].</span><span class="nx">getDay</span><span class="p">();</span>  <span class="c1">// 요일</span>
+
+    <span class="nx">que</span> <span class="o">=</span> <span class="nx">y</span><span class="o">+</span><span class="dl">"</span><span class="s2">-</span><span class="dl">"</span><span class="o">+</span><span class="nx">m</span><span class="o">+</span><span class="dl">"</span><span class="s2">-</span><span class="dl">"</span><span class="o">+</span><span class="nx">da</span><span class="o">+</span><span class="dl">"</span><span class="s2">-</span><span class="dl">"</span><span class="o">+</span><span class="nx">week</span><span class="p">[</span><span class="nx">d</span><span class="p">]</span>
+    <span class="kd">var</span> <span class="nx">now</span> <span class="o">=</span> <span class="nx">year</span><span class="o">+</span><span class="dl">"</span><span class="s2">-</span><span class="dl">"</span><span class="o">+</span><span class="nx">month</span><span class="o">+</span><span class="dl">"</span><span class="s2">-</span><span class="dl">"</span><span class="o">+</span><span class="nx">date</span><span class="o">+</span><span class="dl">"</span><span class="s2">-</span><span class="dl">"</span><span class="o">+</span><span class="nx">week</span><span class="p">[</span><span class="nx">day</span><span class="p">]</span>
+    <span class="c1">// console.log(que, now)</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">que</span> <span class="o">==</span> <span class="nx">now</span><span class="p">){</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">a</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span>
+        <span class="nx">key</span> <span class="o">=</span> <span class="kc">true</span>
+      <span class="p">}</span>
+      <span class="k">else</span><span class="p">{</span>
+        <span class="nx">key</span> <span class="o">=</span> <span class="kc">false</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">else</span><span class="p">{</span>
+      <span class="nx">key</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+
+  <span class="kd">var</span> <span class="nx">subject_val</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">자동 메일 전송 </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">year</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">년 </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">month</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">월 </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">date</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">일 (</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">week</span><span class="p">[</span><span class="nx">day</span><span class="p">]</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">)</span><span class="dl">"</span>
+  
+  <span class="kd">var</span> <span class="nx">address</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">To@email.com</span><span class="dl">"</span>
+  <span class="k">if</span><span class="p">(</span><span class="nx">week</span><span class="p">[</span><span class="nx">day</span><span class="p">]</span> <span class="o">!=</span> <span class="dl">"</span><span class="s2">토</span><span class="dl">"</span> <span class="o">&amp;&amp;</span> <span class="nx">week</span><span class="p">[</span><span class="nx">day</span><span class="p">]</span> <span class="o">!=</span> <span class="dl">"</span><span class="s2">일</span><span class="dl">"</span> <span class="o">&amp;&amp;</span> <span class="nx">key</span> <span class="o">==</span> <span class="kc">false</span><span class="p">){</span>
+    <span class="nx">MailApp</span><span class="p">.</span><span class="nx">sendEmail</span><span class="p">({</span>
+      <span class="na">to</span><span class="p">:</span> <span class="nx">address</span><span class="p">,</span>
+      <span class="na">subject</span><span class="p">:</span> <span class="nx">subject_val</span><span class="p">,</span>
+      <span class="na">htmlBody</span> <span class="p">:</span> <span class="nx">htmlBody</span>
+    <span class="p">});</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Send mail : </span><span class="dl">"</span><span class="p">,</span> <span class="nx">que</span><span class="p">,</span> <span class="nx">week</span><span class="p">[</span><span class="nx">day</span><span class="p">],</span> <span class="nx">key</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="k">else</span><span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Not send mail : </span><span class="dl">"</span><span class="p">,</span> <span class="nx">que</span><span class="p">,</span> <span class="nx">week</span><span class="p">[</span><span class="nx">day</span><span class="p">],</span> <span class="nx">key</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+ 
+<span class="kd">function</span> <span class="nx">getEmailText</span><span class="p">(</span><span class="nx">stockData</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="dl">""</span><span class="p">;</span>
+  <span class="nx">stockData</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">stock</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">text</span> <span class="o">=</span> <span class="nx">text</span> <span class="o">+</span> <span class="nx">stock</span><span class="p">.</span><span class="nx">날짜</span> <span class="o">+</span> <span class="dl">"</span><span class="se">\n</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">stock</span><span class="p">.</span><span class="nx">요일</span> <span class="o">+</span> <span class="dl">"</span><span class="se">\n</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">stock</span><span class="p">.</span><span class="nx">공휴일</span> <span class="o">+</span> <span class="dl">"</span><span class="se">\n</span><span class="dl">"</span> <span class="o">+</span> <span class="dl">"</span><span class="se">\n</span><span class="s2">-----------------------</span><span class="se">\n\n</span><span class="dl">"</span><span class="p">;</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">text</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="cm">/**
+ * @OnlyCurrentDoc
+ */</span>
+<span class="kd">function</span> <span class="nx">getData</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">values</span> <span class="o">=</span> <span class="nx">SpreadsheetApp</span><span class="p">.</span><span class="nx">getActive</span><span class="p">().</span><span class="nx">getSheetByName</span><span class="p">(</span><span class="nx">t</span><span class="p">).</span><span class="nx">getRange</span><span class="p">(</span><span class="nx">s</span><span class="p">).</span><span class="nx">getValues</span><span class="p">();</span>
+  <span class="nx">values</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span> <span class="c1">//remove headers</span>
+  <span class="kd">var</span> <span class="nx">stocks</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">if</span><span class="p">(</span><span class="nx">f</span><span class="o">==</span><span class="kc">true</span><span class="p">){</span>
+    <span class="nx">values</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">stock</span> <span class="o">=</span> <span class="p">{};</span>
+      <span class="nx">stock</span><span class="p">.</span><span class="nx">TitleA</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">stock</span><span class="p">.</span><span class="nx">TitleB</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="nx">stock</span><span class="p">.</span><span class="nx">TitleC</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+      <span class="nx">stock</span><span class="p">.</span><span class="nx">TitleD</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+      <span class="nx">stocks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">stock</span><span class="p">);</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+  <span class="k">else</span><span class="p">{</span>
+    <span class="nx">values</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">stock</span> <span class="o">=</span> <span class="p">{};</span>
+      <span class="nx">stock</span><span class="p">.</span><span class="nx">날짜</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">stock</span><span class="p">.</span><span class="nx">요일</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="nx">stock</span><span class="p">.</span><span class="nx">공휴일</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+      <span class="nx">stocks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">stock</span><span class="p">);</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">stocks</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kd">function</span> <span class="nx">getColor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">values</span> <span class="o">=</span> <span class="nx">SpreadsheetApp</span><span class="p">.</span><span class="nx">getActive</span><span class="p">().</span><span class="nx">getSheetByName</span><span class="p">(</span><span class="dl">"</span><span class="s2">table</span><span class="dl">"</span><span class="p">).</span><span class="nx">getRange</span><span class="p">(</span><span class="dl">"</span><span class="s2">Stocks</span><span class="dl">"</span><span class="p">).</span><span class="nx">getBackgrounds</span><span class="p">();</span>
+  <span class="nx">values</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span> <span class="c1">//remove headers</span>
+  <span class="kd">var</span> <span class="nx">colors</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="nx">values</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="p">{};</span>
+	<span class="nx">color</span><span class="p">.</span><span class="nx">TitleA</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+	<span class="nx">color</span><span class="p">.</span><span class="nx">TitleB</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+	<span class="nx">color</span><span class="p">.</span><span class="nx">TitleC</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+	<span class="nx">color</span><span class="p">.</span><span class="nx">TitleD</span> <span class="o">=</span> <span class="nx">value</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+    <span class="nx">colors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">color</span><span class="p">);</span>
+  <span class="p">})</span>
+  <span class="k">return</span> <span class="nx">colors</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+ 
+ 
+<span class="kd">function</span> <span class="nx">getEmailHtml</span><span class="p">(</span><span class="nx">stockData</span><span class="p">,</span><span class="nx">stockColor</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">htmlTemplate</span> <span class="o">=</span> <span class="nx">HtmlService</span><span class="p">.</span><span class="nx">createTemplateFromFile</span><span class="p">(</span><span class="dl">"</span><span class="s2">Template.html</span><span class="dl">"</span><span class="p">);</span>
+  <span class="nx">htmlTemplate</span><span class="p">.</span><span class="nx">stocks</span> <span class="o">=</span> <span class="nx">stockData</span><span class="p">;</span> 
+  <span class="nx">htmlTemplate</span><span class="p">.</span><span class="nx">colors</span> <span class="o">=</span> <span class="nx">stockColor</span><span class="p">;</span> 
+  <span class="kd">var</span> <span class="nx">htmlBody</span> <span class="o">=</span> <span class="nx">htmlTemplate</span><span class="p">.</span><span class="nx">evaluate</span><span class="p">().</span><span class="nx">getContent</span><span class="p">();</span>
+  <span class="k">return</span> <span class="nx">htmlBody</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></table></code></div></div><blockquote><p>Template.html</p></blockquote><div class="language-html highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+</pre><td class="rouge-code"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;base</span> <span class="na">target=</span><span class="s">"_top"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;span</span>
+      <span class="na">style=</span><span class="s">"
+      font-size: 1.5em;
+      line-height: 1.0em;  
+      color: black;
+      font-family: arial;
+    "</span><span class="nt">&gt;</span>
+      안녕하세요.<span class="nt">&lt;br&gt;&lt;br&gt;</span>
+      자동 메일 전송 테스트 입니다.<span class="nt">&lt;br&gt;&lt;br&gt;</span>  
+    <span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">dir=</span><span class="s">"ltr"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;table</span> <span class="na">cellspacing=</span><span class="s">"0"</span> <span class="na">cellpadding=</span><span class="s">"0"</span> <span class="na">dir=</span><span class="s">"ltr"</span> <span class="na">border=</span><span class="s">"1"</span> <span class="na">style=</span><span class="s">"table-layout:fixed;font-size:8pt;font-family:Arial;border-collapse:collapse;border:none"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;colgroup&gt;</span>
+              <span class="nt">&lt;col</span> <span class="na">width=</span><span class="s">"100"</span><span class="nt">&gt;</span>
+                  <span class="nt">&lt;col</span> <span class="na">width=</span><span class="s">"100"</span><span class="nt">&gt;</span>
+                      <span class="nt">&lt;col</span> <span class="na">width=</span><span class="s">"700"</span><span class="nt">&gt;</span>
+                          <span class="nt">&lt;col</span> <span class="na">width=</span><span class="s">"100"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;/colgroup&gt;</span>
+          <span class="nt">&lt;tbody&gt;</span>
+              <span class="nt">&lt;tr</span> <span class="na">style=</span><span class="s">"height:21px"</span><span class="nt">&gt;</span>
+                  <span class="nt">&lt;td</span> <span class="na">style=</span><span class="s">"border-width:1px;border-style:solid;overflow:hidden;vertical-align:center;background-color:rgb(207,226,243);font-size:11pt;color:rgb(0,0,0);text-align:center"</span>
+                  <span class="na">rowspan=</span><span class="s">"1"</span> <span class="na">colspan=</span><span class="s">"12"</span><span class="nt">&gt;</span>자동 메일 전송 프로그램 테스트<span class="nt">&lt;/td&gt;</span>
+              <span class="nt">&lt;tr</span> <span class="na">style=</span><span class="s">"height:21px"</span><span class="nt">&gt;</span>
+                  <span class="nt">&lt;td</span> <span class="na">style=</span><span class="s">"border-width:1px;border-style:solid;overflow:hidden;vertical-align:center;background-color:rgb(207,226,243);font-size:12pt;text-align:center"</span><span class="nt">&gt;</span>TitleA<span class="nt">&lt;/td&gt;</span>
+                  <span class="nt">&lt;td</span> <span class="na">style=</span><span class="s">"border-width:1px;border-style:solid;overflow:hidden;vertical-align:center;background-color:rgb(207,226,243);font-size:12pt;text-align:center"</span><span class="nt">&gt;</span>TitleB<span class="nt">&lt;/td&gt;</span>
+                  <span class="nt">&lt;td</span> <span class="na">style=</span><span class="s">"border-width:1px;border-style:solid;overflow:hidden;vertical-align:center;background-color:rgb(207,226,243);font-size:12pt;text-align:center"</span><span class="nt">&gt;</span>TitleC<span class="nt">&lt;/td&gt;</span>
+                  <span class="nt">&lt;td</span> <span class="na">style=</span><span class="s">"border-width:1px;border-style:solid;overflow:hidden;vertical-align:center;background-color:rgb(207,226,243);font-size:12pt;text-align:center"</span><span class="nt">&gt;</span>TitleD<span class="nt">&lt;/td&gt;</span>
+              <span class="nt">&lt;/tr&gt;</span>
+              <span class="cp">&lt;? for(var i = 0; i &lt; stocks.length; i++) { ?&gt;</span>
+              <span class="nt">&lt;tr</span> <span class="na">style=</span><span class="s">"height:100%"</span><span class="nt">&gt;</span>
+                  <span class="nt">&lt;td</span> <span class="na">style=</span><span class="s">"border-width:1px;border-style:solid;overflow:hidden;vertical-align:center;font-size:10pt;text-align:center; background-color : &lt;?= colors[i].TitleA?&gt;"</span><span class="nt">&gt;&lt;pre&gt;</span><span class="cp">&lt;?= stocks[i].TitleA?&gt;</span><span class="nt">&lt;/pre&gt;&lt;/td&gt;</span>
+                  <span class="nt">&lt;td</span> <span class="na">style=</span><span class="s">"border-width:1px;border-style:solid;overflow:hidden;vertical-align:center;font-size:10pt;text-align:center; background-color : &lt;?= colors[i].TitleB?&gt;"</span><span class="nt">&gt;&lt;pre&gt;</span><span class="cp">&lt;?= stocks[i].TitleB?&gt;</span><span class="nt">&lt;/pre&gt;&lt;/td&gt;</span>
+                  <span class="nt">&lt;td</span> <span class="na">style=</span><span class="s">"border-width:1px;border-style:solid;overflow:hidden;vertical-align:center;font-size:10pt;text-align:bottom; background-color : &lt;?= colors[i].TitleC?&gt;"</span><span class="nt">&gt;&lt;pre&gt;</span><span class="cp">&lt;?= stocks[i].TitleC?&gt;</span><span class="nt">&lt;/pre&gt;&lt;/td&gt;</span>
+                  <span class="nt">&lt;td</span> <span class="na">style=</span><span class="s">"border-width:1px;border-style:solid;overflow:hidden;vertical-align:center;font-size:10pt;text-align:bottom; background-color : &lt;?= colors[i].TitleD?&gt;"</span><span class="nt">&gt;&lt;pre&gt;</span><span class="cp">&lt;?= stocks[i].TitleD?&gt;</span><span class="nt">&lt;/pre&gt;&lt;/td&gt;</span>
+              <span class="nt">&lt;/tr&gt;</span>
+              <span class="cp">&lt;? } ?&gt;</span> 
+          <span class="nt">&lt;/tbody&gt;</span>
+      <span class="nt">&lt;/table&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;span</span>
+    <span class="na">style=</span><span class="s">"
+    font-size: 1.5em;
+    line-height: 1.0em;  
+    color: black;
+    font-family: arial;
+  "</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;br&gt;&lt;br&gt;</span>
+    감사합니다.
+    <span class="nt">&lt;br&gt;&lt;br&gt;</span>
+  <span class="nt">&lt;/span&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></table></code></div></div></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/etc/'>etc</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/etc/" class="post-tag no-text-decoration" >etc</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=Google Spread sheet & Auto send to mail - Know How & Where&url=https://dnchoi.github.io//posts/google-spreadsheet-automail/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=Google Spread sheet & Auto send to mail - Know How & Where&u=https://dnchoi.github.io//posts/google-spreadsheet-automail/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=Google Spread sheet & Auto send to mail - Know How & Where&url=https://dnchoi.github.io//posts/google-spreadsheet-automail/" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i class="fa-fw fas fa-link small" onclick="copyLink()" data-toggle="tooltip" data-placement="top" title="Copy link"></i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/python-unzip/">Python Unzip module</a><li><a href="/posts/opencv-install/">OpenCV install in Ubuntu</a><li><a href="/posts/onnx-runtime-installer/">ONNX runtime install</a><li><a href="/posts/tensorrt-runtime-installer/">TensorRT runtime installer</a><li><a href="/posts/google-spreadsheet-automail/">Google Spread sheet & Auto send to mail</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/install/">install</a> <a class="post-tag" href="/tags/etc/">etc</a> <a class="post-tag" href="/tags/ros/">ROS</a> <a class="post-tag" href="/tags/python/">python</a> <a class="post-tag" href="/tags/ubuntu/">ubuntu</a> <a class="post-tag" href="/tags/c++/">c++</a> <a class="post-tag" href="/tags/cuda/">cuda</a> <a class="post-tag" href="/tags/nvidia/">nvidia</a> <a class="post-tag" href="/tags/onnx/">onnx</a> <a class="post-tag" href="/tags/tensorrt/">tensorrt</a></div></div></div><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/zip-unzip/"><div class="card-body"> <span class="timeago small" > Apr 20 <i class="unloaded">2022-04-20T18:45:47+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Zip & Unzip</h3><div class="text-muted small"><p> zip 명령어 실행 시 다음과 같은 에러 발생하면 1 2 The program 'zip' is currently not installed. You can install it by typing: sudo apt install zip 1 sudo apt install zip zip 압축 방법 단일 폴더 압축 1 zip [ zipname...</p></div></div></a></div><div class="card"> <a href="/posts/python-unzip/"><div class="card-body"> <span class="timeago small" > May 11 <i class="unloaded">2022-05-11T18:45:47+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Python Unzip module</h3><div class="text-muted small"><p> Python unzip module with 한글 작성 개요 Open dataset를 다운받아 사용할 때 여러개의 zip 파일이 존재할 경우 압축 해제하는게 번거롭다. 데스크탑과 같이 화면이 출력되는 경우에는 불편함이 없지만, 서버에서 작업할 경우 일일이 unzip을 해야하는 것 같아 그냥 python module을 작성하여 사용했다. unzi...</p></div></div></a></div><div class="card"> <a href="/posts/python-make-tar/"><div class="card-body"> <span class="timeago small" > May 18 <i class="unloaded">2022-05-18T18:45:47+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Python make tar file</h3><div class="text-muted small"><p> Make tar file module with Python 작성 개요 작업 공간 내에 여러 파일을 압출 할 경우 Python glob 모듈을 사용하여 여러 폴더를 각자 폴더명에 맞게 tar 압축 진행 Script filename.tar 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 import tarf...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/tensorrt-runtime/" class="btn btn-outline-primary"><p>TensorRT runtime</p></a> <a href="/posts/zip-unzip/" class="btn btn-outline-primary"><p>Zip & Unzip</p></a></div></div></div></div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script> <script type="text/javascript"> const imgs = document.querySelectorAll('#post-wrapper img'); const observer = lozad(imgs); observer.observe(); </script><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2022 <a href="https://github.com/dnchoi">Dongnyeok Choi</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy/" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-xl-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/tags/install/">install</a> <a class="post-tag" href="/tags/etc/">etc</a> <a class="post-tag" href="/tags/ros/">ROS</a> <a class="post-tag" href="/tags/python/">python</a> <a class="post-tag" href="/tags/ubuntu/">ubuntu</a> <a class="post-tag" href="/tags/c++/">c++</a> <a class="post-tag" href="/tags/cuda/">cuda</a> <a class="post-tag" href="/tags/nvidia/">nvidia</a> <a class="post-tag" href="/tags/onnx/">onnx</a> <a class="post-tag" href="/tags/tensorrt/">tensorrt</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.7.3/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="https://dnchoi.github.io/{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"><div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>{categories}</div><div><i class="fa fa-tag fa-fw"></i>{tags}</div></div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>' }); </script> <script async src="https://www.googletagmanager.com/gtag/js?id="></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); </script>
